@@ -587,7 +587,7 @@ function trackerConnect() {
     conn.on('open', () => {
       trackerConn = conn;
       conn.send({ type: 'name', value: name });
-      setStatus('✅', 'Connecté !', 'Envoi GPS en cours…', '#22c55e');
+      setStatus('🛰️', 'Acquisition GPS…', 'Patientez ~15s pour un signal précis', null);
       document.getElementById('gpsBox').style.display = 'block';
       startTrackerGPS(conn);
     });
@@ -608,22 +608,55 @@ function trackerConnect() {
   });
 }
 
+// ── GPS CORRIGÉ ──
 function startTrackerGPS(conn) {
   if (!('geolocation' in navigator)) {
-    setStatus('❌', 'GPS non disponible', 'Votre appareil ne supporte pas la géolocalisation', '#ef4444');
+    setStatus('❌', 'GPS non disponible', 'Appareil non compatible', '#ef4444');
     return;
   }
+
+  const MAX_ACCURACY = 80;       // rejeter positions > 80m d'imprécision
+  const startTime = Date.now();
+  const WARMUP_MS = 15000;       // ignorer les 15 premières secondes
+  let lastSent = null;
+  const MIN_SEND_DIST = 5;       // n'envoyer que si déplacement > 5m
+
   trackerWatchId = navigator.geolocation.watchPosition(
     (pos) => {
       const { latitude: lat, longitude: lng, accuracy, speed } = pos.coords;
+
+      // Toujours afficher les valeurs brutes
       document.getElementById('tLat').textContent = lat.toFixed(5);
       document.getElementById('tLon').textContent = lng.toFixed(5);
       document.getElementById('tAcc').textContent = accuracy ? Math.round(accuracy) + ' m' : '--';
       document.getElementById('tSpd').textContent = speed ? (speed * 3.6).toFixed(1) + ' km/h' : '0 km/h';
-      if (conn && conn.open) conn.send({ type: 'gps', lat, lng, speed: speed || 0 });
+
+      // ① Rejeter si imprécis (WiFi/réseau mobile)
+      if (accuracy > MAX_ACCURACY) {
+        setStatus('🔍', 'Signal faible', `Précision: ${Math.round(accuracy)}m — attente GPS satellite`, '#f59e0b');
+        return;
+      }
+
+      // ② Ignorer pendant la chauffe GPS
+      if (Date.now() - startTime < WARMUP_MS) {
+        setStatus('🛰️', 'Acquisition…', `Précision: ${Math.round(accuracy)}m — encore quelques secondes`, null);
+        return;
+      }
+
+      // ③ Ne pas envoyer si pas assez de déplacement
+      if (lastSent) {
+        const d = getDistance(lastSent.lat, lastSent.lng, lat, lng);
+        if (d < MIN_SEND_DIST) return;
+      }
+
+      lastSent = { lat, lng };
+      setStatus('✅', 'Connecté', `Précision: ${Math.round(accuracy)}m · envoi en cours`, '#22c55e');
+
+      if (conn && conn.open)
+        conn.send({ type: 'gps', lat, lng, speed: speed || 0 });
     },
     (err) => { setStatus('⚠️', 'Erreur GPS', err.message, '#f59e0b'); },
-    { enableHighAccuracy: true, maximumAge: 0, timeout: 15000 }
+    { enableHighAccuracy: true, maximumAge: 0, timeout: 20000 }
   );
 }
 
