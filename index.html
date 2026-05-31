@@ -192,6 +192,14 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 .gps-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;}
 .gps-val{font-size:13px;font-weight:700;color:var(--yellow);}
 
+/* ── BARRE DE PROGRESSION GPS ── */
+.gps-progress-wrap{margin-top:10px;}
+.gps-progress-lbl{font-size:11px;color:var(--muted);margin-bottom:4px;}
+.gps-progress-bar{width:100%;height:6px;background:var(--surface3);border-radius:3px;overflow:hidden;}
+.gps-progress-fill{height:100%;width:0%;background:var(--green);border-radius:3px;transition:width .5s,background .5s;}
+.gps-progress-fill.warn{background:var(--yellow);}
+.gps-progress-fill.bad{background:var(--red);}
+
 .name-box{width:100%;max-width:360px;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;}
 .name-input{
   width:100%;padding:10px 12px;background:var(--surface2);border:1.5px solid var(--border);
@@ -199,6 +207,10 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
   outline:none;transition:border-color .2s;margin-top:8px;
 }
 .name-input:focus{border-color:var(--blue);}
+
+/* Debug log */
+.debug-box{width:100%;max-width:360px;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px;display:none;}
+.debug-log{font-size:10px;color:var(--muted);font-family:monospace;max-height:80px;overflow-y:auto;line-height:1.6;}
 
 .leaflet-popup-content-wrapper{background:var(--surface)!important;color:var(--text)!important;border:1px solid var(--border)!important;border-radius:8px!important;box-shadow:0 8px 32px rgba(0,0,0,.6)!important;}
 .leaflet-popup-tip{background:var(--surface)!important;}
@@ -331,6 +343,15 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
       <div class="gps-card"><div class="gps-lbl">Précision</div><div class="gps-val" id="tAcc">--</div></div>
       <div class="gps-card"><div class="gps-lbl">Vitesse</div><div class="gps-val" id="tSpd">--</div></div>
     </div>
+    <div class="gps-progress-wrap">
+      <div class="gps-progress-lbl" id="gpsProgLbl">Qualité signal GPS</div>
+      <div class="gps-progress-bar"><div class="gps-progress-fill" id="gpsProgFill"></div></div>
+    </div>
+  </div>
+  <!-- Debug log (activé en ajoutant ?debug à l'URL) -->
+  <div class="debug-box" id="debugBox">
+    <div class="section-label">🛠 Debug GPS</div>
+    <div class="debug-log" id="debugLog"></div>
   </div>
   <button class="connect-btn" onclick="backToSplash()" style="margin-top:8px;padding:10px 20px;background:var(--surface);border:1px solid var(--border);color:var(--muted);border-radius:9px;font-size:12px;">← Revenir au choix</button>
   <div style="height:30px;"></div>
@@ -339,11 +360,28 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 <script>
 const ADMIN_PASSWORD = 'Dadie123.com';
 
+// Active le debug avec ?debug dans l'URL
+const DEBUG = location.search.includes('debug');
+
 let adminMap, adminPeer;
 let connectedPeers = {};
 let selectedPeerId = null;
 let trackerConn = null, trackerWatchId = null;
 const MIN_MOVE = 10;
+
+// ── DEBUG ──
+function dbg(msg) {
+  if (!DEBUG) return;
+  const box = document.getElementById('debugBox');
+  const log = document.getElementById('debugLog');
+  if (box) box.style.display = 'block';
+  if (log) {
+    const t = new Date().toLocaleTimeString();
+    log.innerHTML += `<div>[${t}] ${msg}</div>`;
+    log.scrollTop = log.scrollHeight;
+  }
+  console.log('[FG]', msg);
+}
 
 // ── PASSWORD ──
 function askPassword() {
@@ -352,11 +390,9 @@ function askPassword() {
   document.getElementById('pwModal').classList.add('show');
   setTimeout(() => document.getElementById('pwInput').focus(), 100);
 }
-
 function closePassword() {
   document.getElementById('pwModal').classList.remove('show');
 }
-
 function checkPassword() {
   const val = document.getElementById('pwInput').value;
   if (val === ADMIN_PASSWORD) {
@@ -379,8 +415,9 @@ function enterMode(mode) {
     document.getElementById('trackerView').style.display = 'flex';
   }
 }
-
 function backToSplash() {
+  if (trackerWatchId) { navigator.geolocation.clearWatch(trackerWatchId); trackerWatchId = null; }
+  if (trackerConn) { try { trackerConn.close(); } catch(e){} trackerConn = null; }
   document.getElementById('trackerView').style.display = 'none';
   document.getElementById('splash').style.display = 'flex';
 }
@@ -394,6 +431,9 @@ function initAdmin() {
   const code = genCode();
   document.getElementById('sessionCode').textContent = code;
   document.getElementById('sessionHint').textContent = 'Connexion au serveur…';
+  startAdminPeer(code);
+}
+function startAdminPeer(code) {
   adminPeer = new Peer('fg-admin-' + code, { host: '0.peerjs.com', port: 443, secure: true, path: '/' });
   adminPeer.on('open', () => {
     document.getElementById('sessionHint').textContent = 'Partagez ce code avec vos trackers';
@@ -403,19 +443,12 @@ function initAdmin() {
       const newCode = genCode();
       document.getElementById('sessionCode').textContent = newCode;
       adminPeer.destroy();
-      initAdminWithCode(newCode);
+      startAdminPeer(newCode);
     } else {
       document.getElementById('sessionHint').textContent = '⚠️ Erreur: ' + err.type;
     }
   });
   adminPeer.on('connection', (conn) => handlePeerConnection(conn));
-}
-
-function initAdminWithCode(code) {
-  adminPeer = new Peer('fg-admin-' + code, { host: '0.peerjs.com', port: 443, secure: true, path: '/' });
-  adminPeer.on('open', () => { document.getElementById('sessionHint').textContent = 'Partagez ce code avec vos trackers'; });
-  adminPeer.on('connection', (conn) => handlePeerConnection(conn));
-  adminPeer.on('error', () => { document.getElementById('sessionHint').textContent = '⚠️ Impossible de se connecter'; });
 }
 
 function genCode() {
@@ -424,7 +457,6 @@ function genCode() {
   for (let i = 0; i < 6; i++) c += chars[Math.floor(Math.random() * chars.length)];
   return c;
 }
-
 function copyCode() {
   const code = document.getElementById('sessionCode').textContent;
   navigator.clipboard.writeText(code).then(() => {
@@ -434,7 +466,7 @@ function copyCode() {
   }).catch(() => alert('Code: ' + code));
 }
 
-// ── PEER ──
+// ── PEER (admin) ──
 function handlePeerConnection(conn) {
   const peerId = conn.peer;
   conn.on('open', () => {
@@ -539,13 +571,11 @@ function updateAdminUI() {
     document.getElementById('adminInfoPanel').style.display = 'none';
   }
 }
-
 function selectPeer(id) {
   selectedPeerId = id;
   document.getElementById('aLocateBtn').disabled = false;
   updateAdminUI();
 }
-
 function locateSelected() {
   if (!selectedPeerId || !connectedPeers[selectedPeerId]?.currentPoint) return;
   const { lat, lng } = connectedPeers[selectedPeerId].currentPoint;
@@ -553,7 +583,6 @@ function locateSelected() {
   const c = L.circle([lat, lng], { color: '#f59e0b', fillColor: '#f59e0b', fillOpacity: .15, radius: 50, weight: 2 }).addTo(adminMap);
   setTimeout(() => { if (adminMap.hasLayer(c)) adminMap.removeLayer(c); }, 3000);
 }
-
 function adminClearAll() {
   if (!confirm('Effacer tous les trackers de la carte ?')) return;
   Object.entries(connectedPeers).forEach(([id, p]) => {
@@ -579,27 +608,43 @@ function trackerConnect() {
   const code = document.getElementById('codeInput').value.trim().toUpperCase();
   if (code.length < 4) { setStatus('⚠️', 'Code invalide', 'Le code doit faire au moins 4 caractères', '#f59e0b'); return; }
   const name = document.getElementById('trackerName').value.trim() || 'Tracker';
+
+  // Stopper tout GPS précédent
+  if (trackerWatchId) { navigator.geolocation.clearWatch(trackerWatchId); trackerWatchId = null; }
+
   setStatus('⏳', 'Connexion…', 'Connexion au serveur PeerJS…', null);
+
   const myPeer = new Peer({ host: '0.peerjs.com', port: 443, secure: true, path: '/' });
-  myPeer.on('open', () => {
+
+  myPeer.on('open', (myId) => {
+    dbg('Peer ouvert: ' + myId);
     setStatus('🔗', "Connexion à l'admin…", 'Code: ' + code, null);
     const conn = myPeer.connect('fg-admin-' + code, { reliable: true });
+
     conn.on('open', () => {
+      dbg('Connexion admin ouverte');
       trackerConn = conn;
       conn.send({ type: 'name', value: name });
-      setStatus('🛰️', 'Acquisition GPS…', 'Patientez ~15s pour un signal précis', null);
+      setStatus('🛰️', 'Acquisition GPS…', 'Démarrage du GPS…', null);
       document.getElementById('gpsBox').style.display = 'block';
       startTrackerGPS(conn);
     });
+
     conn.on('close', () => {
-      setStatus('❌', 'Déconnecté', 'La connexion a été fermée', '#ef4444');
+      dbg('Connexion fermée');
+      setStatus('❌', 'Déconnecté', 'La connexion a été fermée. Reconnectez-vous.', '#ef4444');
       document.getElementById('gpsBox').style.display = 'none';
-      if (trackerWatchId) navigator.geolocation.clearWatch(trackerWatchId);
+      if (trackerWatchId) { navigator.geolocation.clearWatch(trackerWatchId); trackerWatchId = null; }
     });
-    conn.on('error', () => { setStatus('❌', 'Erreur', 'Problème de connexion', '#ef4444'); });
-    myPeer.on('error', () => { setStatus('❌', 'Admin introuvable', 'Vérifiez le code et réessayez', '#ef4444'); });
+
+    conn.on('error', (e) => {
+      dbg('Erreur conn: ' + e);
+      setStatus('❌', 'Erreur connexion', String(e), '#ef4444');
+    });
   });
+
   myPeer.on('error', (err) => {
+    dbg('Erreur peer: ' + err.type);
     if (err.type === 'peer-unavailable') {
       setStatus('❌', 'Admin introuvable', 'Vérifiez le code « ' + code + ' » et réessayez', '#ef4444');
     } else {
@@ -608,55 +653,131 @@ function trackerConnect() {
   });
 }
 
-// ── GPS CORRIGÉ ──
+// ── BARRE DE QUALITÉ GPS ──
+function updateGpsQuality(accuracy) {
+  const fill = document.getElementById('gpsProgFill');
+  const lbl  = document.getElementById('gpsProgLbl');
+  if (!fill) return;
+  // < 10m = excellent, 10-30 = bon, 30-80 = moyen, >80 = mauvais
+  let pct, cls, txt;
+  if (accuracy <= 10)      { pct = 100; cls = '';     txt = `✅ Excellent (${Math.round(accuracy)} m)`; }
+  else if (accuracy <= 30) { pct = 75;  cls = '';     txt = `🟢 Bon (${Math.round(accuracy)} m)`; }
+  else if (accuracy <= 80) { pct = 45;  cls = 'warn'; txt = `🟡 Moyen (${Math.round(accuracy)} m)`; }
+  else                     { pct = 15;  cls = 'bad';  txt = `🔴 Faible (${Math.round(accuracy)} m)`; }
+  fill.style.width = pct + '%';
+  fill.className = 'gps-progress-fill ' + cls;
+  document.getElementById('gpsProgLbl').textContent = txt;
+}
+
+// ── GPS — VERSION CORRIGÉE ──
 function startTrackerGPS(conn) {
   if (!('geolocation' in navigator)) {
-    setStatus('❌', 'GPS non disponible', 'Appareil non compatible', '#ef4444');
+    setStatus('❌', 'GPS non disponible', 'Votre appareil ne supporte pas la géolocalisation', '#ef4444');
     return;
   }
 
-  const MAX_ACCURACY = 80;       // rejeter positions > 80m d'imprécision
-  const startTime = Date.now();
-  const WARMUP_MS = 15000;       // ignorer les 15 premières secondes
-  let lastSent = null;
-  const MIN_SEND_DIST = 5;       // n'envoyer que si déplacement > 5m
+  // Paramètres assouplis et robustes
+  const MAX_ACCURACY   = 200;   // accepter jusqu'à 200m (le filtre se voit dans la barre qualité)
+  const GOOD_ACCURACY  = 80;    // en dessous = on envoie
+  const MIN_SEND_DIST  = 3;     // envoyer si ≥ 3m de déplacement (assoupli)
+  const WARMUP_MS      = 8000;  // warmup réduit à 8s
+  const startTime      = Date.now();
+  let lastSent         = null;
+  let firstPositionReceived = false;
+  let positionCount    = 0;
+
+  dbg('Démarrage watchPosition');
 
   trackerWatchId = navigator.geolocation.watchPosition(
     (pos) => {
       const { latitude: lat, longitude: lng, accuracy, speed } = pos.coords;
+      positionCount++;
 
-      // Toujours afficher les valeurs brutes
+      dbg(`Pos #${positionCount} acc=${Math.round(accuracy)}m lat=${lat.toFixed(4)} lng=${lng.toFixed(4)}`);
+
+      // Toujours afficher les valeurs brutes immédiatement
       document.getElementById('tLat').textContent = lat.toFixed(5);
       document.getElementById('tLon').textContent = lng.toFixed(5);
       document.getElementById('tAcc').textContent = accuracy ? Math.round(accuracy) + ' m' : '--';
-      document.getElementById('tSpd').textContent = speed ? (speed * 3.6).toFixed(1) + ' km/h' : '0 km/h';
+      document.getElementById('tSpd').textContent = speed != null ? (speed * 3.6).toFixed(1) + ' km/h' : '0 km/h';
 
-      // ① Rejeter si imprécis (WiFi/réseau mobile)
+      // Barre de qualité
+      updateGpsQuality(accuracy);
+
+      // ① Signal trop mauvais → on affiche mais on n'envoie pas
       if (accuracy > MAX_ACCURACY) {
-        setStatus('🔍', 'Signal faible', `Précision: ${Math.round(accuracy)}m — attente GPS satellite`, '#f59e0b');
+        setStatus('🔍', 'Signal GPS très faible', `Précision: ${Math.round(accuracy)} m — bougez à l'extérieur`, '#f59e0b');
         return;
       }
 
-      // ② Ignorer pendant la chauffe GPS
-      if (Date.now() - startTime < WARMUP_MS) {
-        setStatus('🛰️', 'Acquisition…', `Précision: ${Math.round(accuracy)}m — encore quelques secondes`, null);
-        return;
+      // ② Phase de chauffe — afficher mais ne pas envoyer encore
+      const elapsed = Date.now() - startTime;
+      if (elapsed < WARMUP_MS && !firstPositionReceived) {
+        const secLeft = Math.ceil((WARMUP_MS - elapsed) / 1000);
+        setStatus('🛰️', 'Acquisition GPS…', `Précision: ${Math.round(accuracy)} m — encore ~${secLeft}s`, null);
+        // Exception : si le signal est déjà très bon, on envoie quand même
+        if (accuracy > GOOD_ACCURACY) return;
       }
 
-      // ③ Ne pas envoyer si pas assez de déplacement
+      // ③ Filtre de déplacement minimal (sauf pour la toute première position)
       if (lastSent) {
         const d = getDistance(lastSent.lat, lastSent.lng, lat, lng);
-        if (d < MIN_SEND_DIST) return;
+        dbg(`Distance depuis dernier envoi: ${Math.round(d)} m`);
+        if (d < MIN_SEND_DIST) {
+          // Garder le statut à jour sans respammer
+          setStatus('✅', 'En position', `Précision: ${Math.round(accuracy)} m · En attente de mouvement`, '#22c55e');
+          return;
+        }
       }
 
+      // ④ Envoi
       lastSent = { lat, lng };
-      setStatus('✅', 'Connecté', `Précision: ${Math.round(accuracy)}m · envoi en cours`, '#22c55e');
+      firstPositionReceived = true;
 
-      if (conn && conn.open)
+      const qualLabel = accuracy <= 30 ? '📡 Excellent' : accuracy <= 80 ? '🟡 Moyen' : '🟠 Faible';
+      setStatus('✅', 'Position envoyée', `${qualLabel} · ${Math.round(accuracy)} m de précision`, '#22c55e');
+
+      if (conn && conn.open) {
         conn.send({ type: 'gps', lat, lng, speed: speed || 0 });
+        dbg(`Envoyé → lat=${lat.toFixed(5)} lng=${lng.toFixed(5)}`);
+      } else {
+        dbg('Connexion fermée — impossible d\'envoyer');
+        setStatus('❌', 'Connexion perdue', 'Reconnectez-vous depuis le menu', '#ef4444');
+      }
     },
-    (err) => { setStatus('⚠️', 'Erreur GPS', err.message, '#f59e0b'); },
-    { enableHighAccuracy: true, maximumAge: 0, timeout: 20000 }
+    (err) => {
+      dbg('Erreur GPS: ' + err.code + ' ' + err.message);
+      let msg = err.message;
+      let hint = '';
+      switch (err.code) {
+        case 1: // PERMISSION_DENIED
+          msg = 'Permission GPS refusée';
+          hint = 'Allez dans Paramètres → Localisation et autorisez ce site';
+          break;
+        case 2: // POSITION_UNAVAILABLE
+          msg = 'Position GPS indisponible';
+          hint = 'Vérifiez que le GPS est activé et allez à l\'extérieur';
+          break;
+        case 3: // TIMEOUT
+          msg = 'Délai GPS dépassé';
+          hint = 'Nouvelle tentative en cours…';
+          // Retry automatique après 3s
+          setTimeout(() => {
+            if (trackerConn && trackerConn.open) {
+              dbg('Retry GPS après timeout');
+              if (trackerWatchId) { navigator.geolocation.clearWatch(trackerWatchId); trackerWatchId = null; }
+              startTrackerGPS(conn);
+            }
+          }, 3000);
+          break;
+      }
+      setStatus('⚠️', msg, hint || err.message, '#f59e0b');
+    },
+    {
+      enableHighAccuracy: true,
+      maximumAge: 5000,    // accepter une position vieille de 5s max (réduit les délais)
+      timeout: 30000       // timeout porté à 30s pour les GPS lents
+    }
   );
 }
 
