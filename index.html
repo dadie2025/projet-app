@@ -597,6 +597,8 @@ function setStatus(icon, text, sub, color) {
   `;
 }
 
+let myTrackerPeer = null;
+
 function trackerConnect() {
   const code = document.getElementById('codeInput').value.trim().toUpperCase();
   if (code.length < 4) {
@@ -605,41 +607,67 @@ function trackerConnect() {
   }
   const name = document.getElementById('trackerName').value.trim() || 'Tracker';
 
-  // Arrêter GPS et connexion précédente si existante
+  // Nettoyage complet de l'ancienne session
   if (trackerWatchId) { navigator.geolocation.clearWatch(trackerWatchId); trackerWatchId = null; }
-  if (trackerConn) { try { trackerConn.close(); } catch(e){} trackerConn = null; }
+  if (trackerConn)   { try { trackerConn.close(); }   catch(e){} trackerConn = null; }
+  if (myTrackerPeer) { try { myTrackerPeer.destroy(); } catch(e){} myTrackerPeer = null; }
 
   setStatus('⏳', 'Connexion…', 'Connexion au serveur PeerJS…');
 
-  const myPeer = new Peer({ host: '0.peerjs.com', port: 443, secure: true, path: '/' });
+  // Délai pour laisser PeerJS libérer les ressources
+  setTimeout(() => {
+    myTrackerPeer = new Peer({ host: '0.peerjs.com', port: 443, secure: true, path: '/' });
 
-  myPeer.on('open', () => {
-    setStatus('🔗', "Connexion à l'admin…", 'Code: ' + code);
-    const conn = myPeer.connect('fg-admin-' + code, { reliable: true });
+    // Timeout si le serveur ne répond pas
+    const openTimeout = setTimeout(() => {
+      setStatus('❌', 'Serveur inaccessible', 'Vérifiez votre connexion internet et réessayez', '#ef4444');
+      try { myTrackerPeer.destroy(); } catch(e){}
+      myTrackerPeer = null;
+    }, 10000);
 
-    conn.on('open', () => {
-      trackerConn = conn;
-      conn.send({ type: 'name', value: name });
-      document.getElementById('gpsBox').style.display = 'block';
-      setStatus('🛰️', 'GPS en cours…', 'Acquisition du signal, patientez…');
-      startGPS(conn);
+    myTrackerPeer.on('open', () => {
+      clearTimeout(openTimeout);
+      setStatus('🔗', "Connexion à l'admin…", 'Code: ' + code);
+      const conn = myTrackerPeer.connect('fg-admin-' + code, { reliable: true });
+
+      // Timeout si l'admin ne répond pas
+      const connTimeout = setTimeout(() => {
+        setStatus('❌', 'Admin introuvable', 'Vérifiez le code « ' + code + ' » et que l'admin est ouvert', '#ef4444');
+      }, 8000);
+
+      conn.on('open', () => {
+        clearTimeout(connTimeout);
+        trackerConn = conn;
+        conn.send({ type: 'name', value: name });
+        document.getElementById('gpsBox').style.display = 'block';
+        setStatus('✅', 'Connecté ! Acquisition GPS…', 'Patientez quelques secondes…', '#22c55e');
+        startGPS(conn);
+      });
+
+      conn.on('close', () => {
+        clearTimeout(connTimeout);
+        setStatus('❌', 'Déconnecté', 'Appuyez sur Connecter pour relancer', '#ef4444');
+        document.getElementById('gpsBox').style.display = 'none';
+        if (trackerWatchId) { navigator.geolocation.clearWatch(trackerWatchId); trackerWatchId = null; }
+      });
+
+      conn.on('error', (e) => {
+        clearTimeout(connTimeout);
+        setStatus('❌', 'Erreur connexion', String(e), '#ef4444');
+      });
     });
 
-    conn.on('close', () => {
-      setStatus('❌', 'Déconnecté', 'Connexion fermée — relancez la connexion', '#ef4444');
-      document.getElementById('gpsBox').style.display = 'none';
-      if (trackerWatchId) { navigator.geolocation.clearWatch(trackerWatchId); trackerWatchId = null; }
+    myTrackerPeer.on('error', (err) => {
+      if (err.type === 'peer-unavailable')
+        setStatus('❌', 'Admin introuvable', 'Vérifiez le code « ' + code + ' » et que l'admin est bien ouvert', '#ef4444');
+      else if (err.type === 'network')
+        setStatus('❌', 'Pas de réseau', 'Vérifiez votre connexion internet', '#ef4444');
+      else if (err.type === 'server-error')
+        setStatus('❌', 'Serveur PeerJS indisponible', 'Réessayez dans quelques secondes', '#ef4444');
+      else
+        setStatus('❌', 'Erreur: ' + err.type, 'Réessayez', '#ef4444');
     });
-
-    conn.on('error', () => setStatus('❌', 'Erreur connexion', 'Réessayez', '#ef4444'));
-  });
-
-  myPeer.on('error', (err) => {
-    if (err.type === 'peer-unavailable')
-      setStatus('❌', 'Admin introuvable', 'Vérifiez le code « ' + code + ' »', '#ef4444');
-    else
-      setStatus('❌', 'Erreur réseau', err.type, '#ef4444');
-  });
+  }, 300);
 }
 
 /* ═══════════════════════════════════════════
