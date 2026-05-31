@@ -656,15 +656,26 @@ function startGPS(conn) {
     return;
   }
 
-  const MAX_ACC = 300;       // rejeter au-delà de 300m (GPS vraiment mort)
-  const SEND_DIST = 10;      // envoyer si déplacement ≥ 10m
-  let lastSent = null;       // null = pas encore de première position
+  const MAX_ACC   = 300;  // rejeter au-delà de 300m
+  const SEND_DIST = 25;   // seuil : 25m de déplacement réel avant de passer rouge
+  const SMOOTH    = 8;    // nb de positions à moyenner pour lisser le bruit GPS
+
+  let lastSent  = null;   // null = pas encore de première position envoyée
+  let history   = [];     // dernières positions pour le lissage
+
+  // Calcule la position lissée (moyenne des N dernières)
+  function smoothed() {
+    if (!history.length) return null;
+    const lat = history.reduce((s, p) => s + p.lat, 0) / history.length;
+    const lng = history.reduce((s, p) => s + p.lng, 0) / history.length;
+    return { lat, lng };
+  }
 
   trackerWatchId = navigator.geolocation.watchPosition(
     (pos) => {
       const { latitude: lat, longitude: lng, accuracy, speed } = pos.coords;
 
-      // Afficher valeurs brutes dans l'interface
+      // Afficher valeurs brutes
       document.getElementById('tLat').textContent = lat.toFixed(5);
       document.getElementById('tLon').textContent = lng.toFixed(5);
       document.getElementById('tAcc').textContent = Math.round(accuracy) + ' m';
@@ -678,22 +689,29 @@ function startGPS(conn) {
         return;
       }
 
-      // ── PREMIÈRE POSITION : envoi immédiat → point bleu sur la carte ──
+      // Ajouter au buffer de lissage (garder les SMOOTH dernières)
+      history.push({ lat, lng });
+      if (history.length > SMOOTH) history.shift();
+
+      const avg = smoothed();
+
+      // ── PREMIÈRE POSITION : envoi immédiat → point bleu ──
       if (!lastSent) {
-        lastSent = { lat, lng };
-        send(conn, lat, lng, speed);
+        lastSent = avg;
+        send(conn, avg.lat, avg.lng, speed);
         setStatus('✅', 'Point affiché sur la carte', `Précision ${Math.round(accuracy)} m`, '#22c55e');
         return;
       }
 
-      // ── POSITIONS SUIVANTES : envoyer seulement si ≥ 10m ──
-      const d = getDistance(lastSent.lat, lastSent.lng, lat, lng);
+      // ── POSITIONS SUIVANTES : comparer la position lissée au dernier envoi ──
+      const d = getDistance(lastSent.lat, lastSent.lng, avg.lat, avg.lng);
+
       if (d >= SEND_DIST) {
-        lastSent = { lat, lng };
-        send(conn, lat, lng, speed);
-        setStatus('✅', `Déplacé de ${Math.round(d)} m — tracé mis à jour`, `Précision ${Math.round(accuracy)} m`, '#22c55e');
+        lastSent = avg;
+        send(conn, avg.lat, avg.lng, speed);
+        setStatus('✅', `Déplacé de ${Math.round(d)} m`, `Précision ${Math.round(accuracy)} m`, '#22c55e');
       } else {
-        setStatus('✅', 'En position', `Précision ${Math.round(accuracy)} m · Bougez de 10m pour tracer`, '#22c55e');
+        setStatus('✅', 'En position', `Précision ${Math.round(accuracy)} m · immobile (${Math.round(d)} m de dérive)`, '#22c55e');
       }
     },
     (err) => {
