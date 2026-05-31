@@ -13,212 +13,125 @@
 :root{
   --blue:#2563eb;--blue-light:#3b82f6;--blue-dim:rgba(37,99,235,.12);
   --red:#ef4444;--red-dim:rgba(239,68,68,.12);
-  --green:#22c55e;
-  --yellow:#f59e0b;
+  --green:#22c55e;--yellow:#f59e0b;
   --bg:#080f1e;--surface:#0f1c30;--surface2:#162237;--surface3:#1c2d44;
-  --text:#f0f6ff;--muted:#5a7a9a;--border:#1e3350;
-  --r:10px;
+  --text:#f0f6ff;--muted:#5a7a9a;--border:#1e3350;--r:10px;
 }
 html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-family:'Outfit',sans-serif;color:var(--text);}
 
-#splash{
-  position:fixed;inset:0;z-index:9999;
-  background:var(--bg);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:32px;padding:24px;
-}
+/* ── SPLASH ── */
+#splash{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px;padding:24px;}
 .splash-logo{font-size:56px;animation:float 3s ease-in-out infinite;}
 @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
-.splash-title{font-size:32px;font-weight:800;color:var(--text);text-align:center;line-height:1.2;}
+.splash-title{font-size:32px;font-weight:800;color:var(--text);text-align:center;}
 .splash-title span{color:var(--blue-light);}
 .splash-sub{font-size:14px;color:var(--muted);text-align:center;max-width:300px;line-height:1.6;}
 .mode-cards{display:flex;flex-direction:column;gap:12px;width:100%;max-width:340px;}
-.mode-card{
-  padding:18px 20px;border:1.5px solid var(--border);border-radius:14px;
-  background:var(--surface);cursor:pointer;transition:all .25s;
-  display:flex;align-items:center;gap:16px;
-}
+.mode-card{padding:18px 20px;border:1.5px solid var(--border);border-radius:14px;background:var(--surface);cursor:pointer;transition:all .25s;display:flex;align-items:center;gap:16px;}
 .mode-card:hover,.mode-card:active{border-color:var(--blue);background:var(--blue-dim);transform:translateY(-2px);}
 .mode-icon{font-size:28px;flex-shrink:0;}
 .mode-name{font-size:16px;font-weight:700;margin-bottom:3px;}
 .mode-desc{font-size:12px;color:var(--muted);line-height:1.5;}
 
-/* ── PASSWORD MODAL ── */
-#pwModal{
-  position:fixed;inset:0;z-index:99999;
-  background:rgba(8,15,30,.92);
-  display:none;align-items:center;justify-content:center;padding:24px;
-}
+/* ── PASSWORD ── */
+#pwModal{position:fixed;inset:0;z-index:99999;background:rgba(8,15,30,.92);display:none;align-items:center;justify-content:center;padding:24px;}
 #pwModal.show{display:flex;}
-.pw-box{
-  background:var(--surface);border:1px solid var(--border);border-radius:16px;
-  padding:28px 24px;width:100%;max-width:320px;text-align:center;
-}
-.pw-box .pw-icon{font-size:36px;margin-bottom:12px;}
+.pw-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 24px;width:100%;max-width:320px;text-align:center;}
+.pw-icon{font-size:36px;margin-bottom:12px;}
 .pw-box h3{font-size:18px;font-weight:800;margin-bottom:4px;}
 .pw-box p{font-size:12px;color:var(--muted);margin-bottom:18px;}
-.pw-input{
-  width:100%;padding:12px 14px;background:var(--surface2);border:1.5px solid var(--border);
-  color:var(--text);border-radius:9px;font-family:'Outfit',sans-serif;font-size:15px;
-  outline:none;transition:border-color .2s;margin-bottom:10px;text-align:center;
-  letter-spacing:2px;
-}
+.pw-input{width:100%;padding:12px 14px;background:var(--surface2);border:1.5px solid var(--border);color:var(--text);border-radius:9px;font-family:'Outfit',sans-serif;font-size:15px;outline:none;margin-bottom:10px;text-align:center;letter-spacing:2px;}
 .pw-input:focus{border-color:var(--blue);}
 .pw-error{font-size:12px;color:var(--red);margin-bottom:10px;min-height:18px;}
-.pw-btn{
-  width:100%;padding:12px;background:var(--blue);border:none;color:#fff;
-  border-radius:9px;font-family:'Outfit',sans-serif;font-weight:700;font-size:14px;
-  cursor:pointer;transition:all .2s;margin-bottom:8px;
-}
-.pw-btn:active{transform:scale(.97);}
-.pw-cancel{
-  width:100%;padding:10px;background:transparent;border:1px solid var(--border);
-  color:var(--muted);border-radius:9px;font-family:'Outfit',sans-serif;font-size:13px;
-  cursor:pointer;transition:all .2s;
-}
+.pw-btn{width:100%;padding:12px;background:var(--blue);border:none;color:#fff;border-radius:9px;font-family:'Outfit',sans-serif;font-weight:700;font-size:14px;cursor:pointer;margin-bottom:8px;}
+.pw-cancel{width:100%;padding:10px;background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:9px;font-family:'Outfit',sans-serif;font-size:13px;cursor:pointer;}
 .pw-cancel:hover{border-color:var(--red);color:var(--red);}
 
+/* ── ADMIN ── */
 #adminView{display:none;width:100%;height:100vh;}
 .admin-grid{display:grid;grid-template-columns:1fr 380px;height:100vh;}
-@media(max-width:900px){.admin-grid{grid-template-columns:1fr;grid-template-rows:55vh 1fr;}}
 #adminMap{width:100%;height:100%;}
-
-.sidebar{
-  background:var(--surface);border-left:1px solid var(--border);
-  display:flex;flex-direction:column;height:100vh;overflow:hidden;
-}
-.sidebar-header{
-  padding:16px 18px 12px;border-bottom:1px solid var(--border);
-  background:var(--surface2);flex-shrink:0;
-}
+.sidebar{background:var(--surface);border-left:1px solid var(--border);display:flex;flex-direction:column;height:100vh;overflow:hidden;}
+.sidebar-header{padding:16px 18px 12px;border-bottom:1px solid var(--border);background:var(--surface2);flex-shrink:0;}
 .sidebar-header h1{font-size:22px;font-weight:800;color:var(--blue-light);margin-bottom:2px;}
 .sidebar-header p{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
-
 .sidebar-body{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:14px;}
 .sidebar-body::-webkit-scrollbar{width:4px;}
 .sidebar-body::-webkit-scrollbar-thumb{background:var(--blue);border-radius:4px;}
-
 .section-label{font-size:11px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
-
 .session-box{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:14px;}
 .session-row{display:flex;align-items:center;gap:10px;}
 .session-code{flex:1;font-size:22px;font-weight:800;letter-spacing:4px;color:var(--blue-light);font-family:monospace;}
-.copy-btn{
-  padding:6px 12px;border:1px solid var(--border);background:var(--surface3);
-  color:var(--muted);border-radius:7px;cursor:pointer;font-size:12px;font-weight:600;
-  transition:all .2s;white-space:nowrap;
-}
+.copy-btn{padding:6px 12px;border:1px solid var(--border);background:var(--surface3);color:var(--muted);border-radius:7px;cursor:pointer;font-size:12px;font-weight:600;transition:all .2s;white-space:nowrap;}
 .copy-btn:hover{border-color:var(--blue);color:var(--blue);}
 .session-hint{font-size:11px;color:var(--muted);margin-top:8px;line-height:1.5;}
-
-.peer-list{display:flex;flex-direction:column;gap:6px;max-height:140px;overflow-y:auto;}
-.peer-list::-webkit-scrollbar{width:3px;}
-.peer-list::-webkit-scrollbar-thumb{background:var(--blue);border-radius:3px;}
-.peer-item{
-  padding:9px 12px;background:var(--surface2);border:1px solid var(--border);
-  border-radius:8px;cursor:pointer;transition:all .2s;
-  display:flex;align-items:center;gap:10px;
-}
-.peer-item:hover,.peer-item.active{border-color:var(--blue);background:var(--blue-dim);}
+.peer-list{display:flex;flex-direction:column;gap:6px;max-height:160px;overflow-y:auto;}
+.peer-item{padding:9px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:10px;}
+.peer-item:hover{border-color:var(--blue);background:var(--blue-dim);}
 .peer-item.active{background:var(--blue);border-color:var(--blue);}
-.peer-dot{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;animation:pulsedot 2s infinite;}
-@keyframes pulsedot{0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.5);}50%{box-shadow:0 0 0 5px rgba(34,197,94,0);}}
-.peer-dot.moving{background:var(--red);animation:pulsedot-red 1.2s infinite;}
-@keyframes pulsedot-red{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.5);}50%{box-shadow:0 0 0 5px rgba(239,68,68,0);}}
-.peer-name{font-weight:600;font-size:13px;flex:1;}
+.peer-dot{width:9px;height:9px;border-radius:50%;background:var(--blue-light);flex-shrink:0;animation:pdot-blue 2s infinite;}
+@keyframes pdot-blue{0%,100%{box-shadow:0 0 0 0 rgba(59,130,246,.6);}50%{box-shadow:0 0 0 5px rgba(59,130,246,0);}}
+.peer-dot.moving{background:var(--red);animation:pdot-red 1s infinite;}
+@keyframes pdot-red{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.7);}50%{box-shadow:0 0 0 6px rgba(239,68,68,0);}}
+.peer-name{font-weight:700;font-size:13px;flex:1;}
 .peer-sub{font-size:11px;color:var(--muted);}
 .peer-item.active .peer-sub{color:rgba(255,255,255,.7);}
-.badge{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;}
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;}
 .badge.moving{background:var(--red-dim);color:var(--red);}
 .badge.idle{background:var(--blue-dim);color:var(--blue-light);}
-
 .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
 .info-card{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 11px;}
 .info-card.full{grid-column:1/-1;}
 .info-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;}
 .info-val{font-size:14px;font-weight:700;color:var(--yellow);}
-
 .btn-row{display:flex;gap:8px;flex-shrink:0;padding:12px 14px;border-top:1px solid var(--border);}
-.btn{
-  flex:1;padding:10px 8px;border:1.5px solid var(--border);background:transparent;
-  color:var(--text);font-weight:700;cursor:pointer;border-radius:9px;
-  font-family:'Outfit',sans-serif;font-size:12px;letter-spacing:.3px;
-  transition:all .2s;display:flex;align-items:center;justify-content:center;gap:5px;
-}
+.btn{flex:1;padding:10px 8px;border:1.5px solid var(--border);background:transparent;color:var(--text);font-weight:700;cursor:pointer;border-radius:9px;font-family:'Outfit',sans-serif;font-size:12px;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:5px;}
 .btn:active:not(:disabled){transform:scale(.96);}
 .btn.locate{border-color:var(--yellow);color:var(--yellow);}
 .btn.danger{border-color:var(--red);color:var(--red);}
 .btn:disabled{opacity:.3;cursor:not-allowed;}
-
 .empty{text-align:center;padding:16px;color:var(--muted);font-size:12px;}
 .empty-icon{font-size:24px;margin-bottom:6px;}
 
-#trackerView{
-  display:none;flex-direction:column;align-items:center;justify-content:flex-start;
-  height:100vh;height:100dvh;padding:20px 16px;gap:16px;overflow-y:auto;background:var(--bg);
-}
-.tracker-header{text-align:center;padding-top:20px;}
-.tracker-header .t-logo{font-size:40px;margin-bottom:8px;}
-.tracker-header h2{font-size:24px;font-weight:800;color:var(--text);}
+/* ── TRACKER ── */
+#trackerView{display:none;flex-direction:column;align-items:center;justify-content:flex-start;height:100dvh;padding:20px 16px;gap:14px;overflow-y:auto;background:var(--bg);}
+.tracker-header{text-align:center;padding-top:16px;}
+.t-logo{font-size:40px;margin-bottom:8px;}
+.tracker-header h2{font-size:24px;font-weight:800;}
 .tracker-header p{font-size:13px;color:var(--muted);margin-top:4px;}
-
-.connect-box{width:100%;max-width:360px;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;}
-.connect-box h3{font-size:14px;font-weight:700;color:var(--blue-light);margin-bottom:12px;text-transform:uppercase;letter-spacing:.5px;}
+.card{width:100%;max-width:360px;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;}
+.card h3{font-size:13px;font-weight:700;color:var(--blue-light);margin-bottom:12px;text-transform:uppercase;letter-spacing:.5px;}
 .input-row{display:flex;gap:8px;}
-.code-input{
-  flex:1;padding:12px 14px;background:var(--surface2);border:1.5px solid var(--border);
-  color:var(--text);border-radius:9px;font-family:'Outfit',sans-serif;font-weight:700;
-  font-size:20px;letter-spacing:4px;text-transform:uppercase;text-align:center;
-  outline:none;transition:border-color .2s;
-}
+.code-input{flex:1;padding:12px 14px;background:var(--surface2);border:1.5px solid var(--border);color:var(--text);border-radius:9px;font-family:'Outfit',sans-serif;font-weight:700;font-size:20px;letter-spacing:4px;text-transform:uppercase;text-align:center;outline:none;}
 .code-input:focus{border-color:var(--blue);}
-.code-input::placeholder{font-size:14px;letter-spacing:1px;font-weight:400;color:var(--muted);}
-.connect-btn{
-  padding:12px 16px;background:var(--blue);border:none;color:#fff;
-  border-radius:9px;font-family:'Outfit',sans-serif;font-weight:700;font-size:13px;
-  cursor:pointer;transition:all .2s;white-space:nowrap;
-}
-.connect-btn:active{transform:scale(.96);}
-
-.status-box{width:100%;max-width:360px;}
-.status-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;text-align:center;}
-.status-icon{font-size:36px;margin-bottom:10px;}
+.code-input::placeholder{font-size:13px;letter-spacing:1px;font-weight:400;color:var(--muted);}
+.connect-btn{padding:12px 16px;background:var(--blue);border:none;color:#fff;border-radius:9px;font-family:'Outfit',sans-serif;font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap;}
+.connect-btn:active{opacity:.85;}
+.name-input{width:100%;padding:10px 12px;background:var(--surface2);border:1.5px solid var(--border);color:var(--text);border-radius:8px;font-family:'Outfit',sans-serif;font-size:14px;outline:none;margin-top:8px;}
+.name-input:focus{border-color:var(--blue);}
+.status-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;text-align:center;width:100%;max-width:360px;}
+.status-icon{font-size:34px;margin-bottom:8px;}
 .status-text{font-size:16px;font-weight:700;margin-bottom:4px;}
 .status-sub{font-size:12px;color:var(--muted);line-height:1.5;}
-
-.gps-box{width:100%;max-width:360px;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;display:none;}
-.gps-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;}
+.gps-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;}
 .gps-card{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;}
 .gps-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;}
 .gps-val{font-size:13px;font-weight:700;color:var(--yellow);}
+.acc-bar-wrap{margin-top:10px;}
+.acc-bar-lbl{font-size:11px;color:var(--muted);margin-bottom:4px;}
+.acc-bar{width:100%;height:6px;background:var(--surface3);border-radius:3px;overflow:hidden;}
+.acc-fill{height:100%;width:0;border-radius:3px;transition:width .5s,background .5s;background:var(--green);}
+.acc-fill.warn{background:var(--yellow);}
+.acc-fill.bad{background:var(--red);}
+.back-btn{padding:10px 20px;background:var(--surface);border:1px solid var(--border);color:var(--muted);border-radius:9px;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif;}
 
-/* ── BARRE DE PROGRESSION GPS ── */
-.gps-progress-wrap{margin-top:10px;}
-.gps-progress-lbl{font-size:11px;color:var(--muted);margin-bottom:4px;}
-.gps-progress-bar{width:100%;height:6px;background:var(--surface3);border-radius:3px;overflow:hidden;}
-.gps-progress-fill{height:100%;width:0%;background:var(--green);border-radius:3px;transition:width .5s,background .5s;}
-.gps-progress-fill.warn{background:var(--yellow);}
-.gps-progress-fill.bad{background:var(--red);}
-
-.name-box{width:100%;max-width:360px;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;}
-.name-input{
-  width:100%;padding:10px 12px;background:var(--surface2);border:1.5px solid var(--border);
-  color:var(--text);border-radius:8px;font-family:'Outfit',sans-serif;font-size:14px;
-  outline:none;transition:border-color .2s;margin-top:8px;
-}
-.name-input:focus{border-color:var(--blue);}
-
-/* Debug log */
-.debug-box{width:100%;max-width:360px;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px;display:none;}
-.debug-log{font-size:10px;color:var(--muted);font-family:monospace;max-height:80px;overflow-y:auto;line-height:1.6;}
-
+/* Leaflet popup */
 .leaflet-popup-content-wrapper{background:var(--surface)!important;color:var(--text)!important;border:1px solid var(--border)!important;border-radius:8px!important;box-shadow:0 8px 32px rgba(0,0,0,.6)!important;}
 .leaflet-popup-tip{background:var(--surface)!important;}
 .leaflet-popup-content{font-family:'Outfit',sans-serif!important;font-size:13px!important;margin:10px!important;}
 
 @media(max-width:900px){
   .admin-grid{grid-template-columns:1fr;grid-template-rows:55vh 1fr;}
-  #adminMap{height:100%;}
   .sidebar{border-left:none;border-top:1px solid var(--border);height:auto;max-height:45vh;}
   .sidebar-header h1{font-size:18px;}
   .sidebar-body{padding:10px;}
@@ -237,14 +150,14 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
   <div class="mode-cards">
     <div class="mode-card" onclick="askPassword()">
       <div class="mode-icon">🖥️</div>
-      <div class="mode-info">
+      <div>
         <div class="mode-name">PC Admin</div>
-        <div class="mode-desc">Voir la carte et toutes les positions en temps réel. Accès protégé par mot de passe.</div>
+        <div class="mode-desc">Voir la carte et toutes les positions en temps réel. Accès protégé.</div>
       </div>
     </div>
     <div class="mode-card" onclick="enterMode('tracker')">
       <div class="mode-icon">📱</div>
-      <div class="mode-info">
+      <div>
         <div class="mode-name">Tracker (Téléphone)</div>
         <div class="mode-desc">Envoyer votre position GPS à l'admin via un code de session.</div>
       </div>
@@ -258,7 +171,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
     <div class="pw-icon">🔒</div>
     <h3>Accès Admin</h3>
     <p>Entrez le mot de passe pour accéder à la console</p>
-    <input class="pw-input" type="password" id="pwInput" placeholder="Mot de passe" onkeydown="if(event.key==='Enter')checkPassword()">
+    <input class="pw-input" type="password" id="pwInput" placeholder="Mot de passe"
+      onkeydown="if(event.key==='Enter')checkPassword()">
     <div class="pw-error" id="pwError"></div>
     <button class="pw-btn" onclick="checkPassword()">Entrer</button>
     <button class="pw-cancel" onclick="closePassword()">Annuler</button>
@@ -275,6 +189,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
         <p>Console Admin</p>
       </div>
       <div class="sidebar-body">
+
         <div>
           <div class="section-label">📡 Code de session</div>
           <div class="session-box">
@@ -285,26 +200,29 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
             <div class="session-hint" id="sessionHint">Génération en cours…</div>
           </div>
         </div>
+
         <div>
           <div class="section-label">📱 Trackers connectés (<span id="peerCount">0</span>)</div>
           <div class="peer-list" id="peerList">
             <div class="empty"><div class="empty-icon">📡</div>En attente de trackers…</div>
           </div>
         </div>
+
         <div id="adminInfoPanel" style="display:none;">
           <div class="section-label">📍 Position sélectionnée</div>
           <div class="info-grid">
             <div class="info-card full"><div class="info-lbl">État</div><div class="info-val" id="aState">--</div></div>
-            <div class="info-card"><div class="info-lbl">Distance départ</div><div class="info-val" id="aDist">0 m</div></div>
+            <div class="info-card"><div class="info-lbl">Distance parcourue</div><div class="info-val" id="aDist">0 m</div></div>
             <div class="info-card"><div class="info-lbl">Vitesse</div><div class="info-val" id="aSpeed">0 km/h</div></div>
             <div class="info-card"><div class="info-lbl">Latitude</div><div class="info-val" id="aLat">--</div></div>
             <div class="info-card"><div class="info-lbl">Longitude</div><div class="info-val" id="aLon">--</div></div>
           </div>
         </div>
+
       </div>
       <div class="btn-row">
-        <button class="btn locate" onclick="locateSelected()" id="aLocateBtn" disabled>📍 Localiser</button>
-        <button class="btn danger" onclick="adminClearAll()" id="aClearBtn" disabled>🗑 Effacer</button>
+        <button class="btn locate" id="aLocateBtn" onclick="locateSelected()" disabled>📍 Localiser</button>
+        <button class="btn danger" id="aClearBtn" onclick="adminClearAll()" disabled>🗑 Effacer</button>
       </div>
     </div>
   </div>
@@ -317,73 +235,64 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
     <h2>Mode Tracker</h2>
     <p>Envoi de position vers l'admin</p>
   </div>
-  <div class="name-box">
-    <div class="section-label">Votre nom / ID bois</div>
+
+  <div class="card">
+    <h3>Votre nom / ID</h3>
     <input class="name-input" id="trackerName" placeholder="ex: Bois A, Camion 1…" maxlength="30">
   </div>
-  <div class="connect-box">
+
+  <div class="card">
     <h3>Code de session Admin</h3>
     <div class="input-row">
-      <input class="code-input" id="codeInput" maxlength="6" placeholder="CODE" oninput="this.value=this.value.toUpperCase()">
+      <input class="code-input" id="codeInput" maxlength="6" placeholder="CODE"
+        oninput="this.value=this.value.toUpperCase()">
       <button class="connect-btn" onclick="trackerConnect()">Connecter</button>
     </div>
   </div>
-  <div class="status-box">
-    <div class="status-card" id="statusCard">
-      <div class="status-icon">⏳</div>
-      <div class="status-text">En attente</div>
-      <div class="status-sub">Entrez le code admin et appuyez sur Connecter</div>
-    </div>
+
+  <div class="status-card" id="statusCard">
+    <div class="status-icon">⏳</div>
+    <div class="status-text">En attente</div>
+    <div class="status-sub">Entrez le code admin et appuyez sur Connecter</div>
   </div>
-  <div class="gps-box" id="gpsBox">
-    <div class="section-label">📡 Ma position GPS</div>
+
+  <div class="card" id="gpsBox" style="display:none;">
+    <h3>📡 Ma position GPS</h3>
     <div class="gps-grid">
       <div class="gps-card"><div class="gps-lbl">Latitude</div><div class="gps-val" id="tLat">--</div></div>
       <div class="gps-card"><div class="gps-lbl">Longitude</div><div class="gps-val" id="tLon">--</div></div>
       <div class="gps-card"><div class="gps-lbl">Précision</div><div class="gps-val" id="tAcc">--</div></div>
       <div class="gps-card"><div class="gps-lbl">Vitesse</div><div class="gps-val" id="tSpd">--</div></div>
     </div>
-    <div class="gps-progress-wrap">
-      <div class="gps-progress-lbl" id="gpsProgLbl">Qualité signal GPS</div>
-      <div class="gps-progress-bar"><div class="gps-progress-fill" id="gpsProgFill"></div></div>
+    <div class="acc-bar-wrap">
+      <div class="acc-bar-lbl" id="accLbl">Signal GPS…</div>
+      <div class="acc-bar"><div class="acc-fill" id="accFill"></div></div>
     </div>
   </div>
-  <!-- Debug log (activé en ajoutant ?debug à l'URL) -->
-  <div class="debug-box" id="debugBox">
-    <div class="section-label">🛠 Debug GPS</div>
-    <div class="debug-log" id="debugLog"></div>
-  </div>
-  <button class="connect-btn" onclick="backToSplash()" style="margin-top:8px;padding:10px 20px;background:var(--surface);border:1px solid var(--border);color:var(--muted);border-radius:9px;font-size:12px;">← Revenir au choix</button>
-  <div style="height:30px;"></div>
+
+  <button class="back-btn" onclick="backToSplash()">← Revenir au choix</button>
+  <div style="height:24px;"></div>
 </div>
 
 <script>
+/* ═══════════════════════════════════════════
+   CONFIGURATION
+═══════════════════════════════════════════ */
 const ADMIN_PASSWORD = 'Dadie123.com';
+const MIN_MOVE_METERS = 10;   // distance pour passer bleu → rouge et tracer un nouveau segment
 
-// Active le debug avec ?debug dans l'URL
-const DEBUG = location.search.includes('debug');
-
+/* ═══════════════════════════════════════════
+   ÉTAT GLOBAL
+═══════════════════════════════════════════ */
 let adminMap, adminPeer;
-let connectedPeers = {};
-let selectedPeerId = null;
-let trackerConn = null, trackerWatchId = null;
-const MIN_MOVE = 10;
+let peers = {};            // { peerId: PeerData }
+let selectedId = null;
+let trackerWatchId = null;
+let trackerConn = null;
 
-// ── DEBUG ──
-function dbg(msg) {
-  if (!DEBUG) return;
-  const box = document.getElementById('debugBox');
-  const log = document.getElementById('debugLog');
-  if (box) box.style.display = 'block';
-  if (log) {
-    const t = new Date().toLocaleTimeString();
-    log.innerHTML += `<div>[${t}] ${msg}</div>`;
-    log.scrollTop = log.scrollHeight;
-  }
-  console.log('[FG]', msg);
-}
-
-// ── PASSWORD ──
+/* ═══════════════════════════════════════════
+   PASSWORD
+═══════════════════════════════════════════ */
 function askPassword() {
   document.getElementById('pwInput').value = '';
   document.getElementById('pwError').textContent = '';
@@ -394,8 +303,7 @@ function closePassword() {
   document.getElementById('pwModal').classList.remove('show');
 }
 function checkPassword() {
-  const val = document.getElementById('pwInput').value;
-  if (val === ADMIN_PASSWORD) {
+  if (document.getElementById('pwInput').value === ADMIN_PASSWORD) {
     closePassword();
     enterMode('admin');
   } else {
@@ -405,7 +313,9 @@ function checkPassword() {
   }
 }
 
-// ── MODE ──
+/* ═══════════════════════════════════════════
+   NAVIGATION
+═══════════════════════════════════════════ */
 function enterMode(mode) {
   document.getElementById('splash').style.display = 'none';
   if (mode === 'admin') {
@@ -419,36 +329,44 @@ function backToSplash() {
   if (trackerWatchId) { navigator.geolocation.clearWatch(trackerWatchId); trackerWatchId = null; }
   if (trackerConn) { try { trackerConn.close(); } catch(e){} trackerConn = null; }
   document.getElementById('trackerView').style.display = 'none';
+  document.getElementById('gpsBox').style.display = 'none';
   document.getElementById('splash').style.display = 'flex';
 }
 
-// ── ADMIN ──
+/* ═══════════════════════════════════════════
+   ADMIN — INIT CARTE
+═══════════════════════════════════════════ */
 function initAdmin() {
-  adminMap = L.map('adminMap', { zoomControl: false }).setView([6.8276, -5.2893], 12);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OSM', maxZoom: 19 }).addTo(adminMap);
+  adminMap = L.map('adminMap', { zoomControl: false }).setView([6.8276, -5.2893], 13);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    { attribution: '© OSM', maxZoom: 19 }).addTo(adminMap);
   L.control.zoom({ position: 'topright' }).addTo(adminMap);
   adminMap.on('click', () => adminMap.closePopup());
+
   const code = genCode();
   document.getElementById('sessionCode').textContent = code;
   document.getElementById('sessionHint').textContent = 'Connexion au serveur…';
   startAdminPeer(code);
 }
+
 function startAdminPeer(code) {
-  adminPeer = new Peer('fg-admin-' + code, { host: '0.peerjs.com', port: 443, secure: true, path: '/' });
+  adminPeer = new Peer('fg-admin-' + code,
+    { host: '0.peerjs.com', port: 443, secure: true, path: '/' });
+
   adminPeer.on('open', () => {
     document.getElementById('sessionHint').textContent = 'Partagez ce code avec vos trackers';
   });
   adminPeer.on('error', (err) => {
     if (err.type === 'unavailable-id') {
-      const newCode = genCode();
-      document.getElementById('sessionCode').textContent = newCode;
+      const c2 = genCode();
+      document.getElementById('sessionCode').textContent = c2;
       adminPeer.destroy();
-      startAdminPeer(newCode);
+      startAdminPeer(c2);
     } else {
       document.getElementById('sessionHint').textContent = '⚠️ Erreur: ' + err.type;
     }
   });
-  adminPeer.on('connection', (conn) => handlePeerConnection(conn));
+  adminPeer.on('connection', handleNewPeer);
 }
 
 function genCode() {
@@ -466,331 +384,380 @@ function copyCode() {
   }).catch(() => alert('Code: ' + code));
 }
 
-// ── PEER (admin) ──
-function handlePeerConnection(conn) {
-  const peerId = conn.peer;
+/* ═══════════════════════════════════════════
+   ADMIN — GESTION DES PAIRS
+═══════════════════════════════════════════ */
+function handleNewPeer(conn) {
+  const id = conn.peer;
+
   conn.on('open', () => {
-    connectedPeers[peerId] = {
-      conn, name: 'Tracker…',
-      startPoint: null, currentPoint: null,
-      marker: null, polyline: null,
-      trailPoints: [], distance: 0, isMoving: false, speed: 0
+    peers[id] = {
+      conn,
+      name: 'Tracker…',
+      // position actuelle
+      lat: null, lng: null, speed: 0,
+      // position du DERNIER point tracé (pour calculer la distance de déplacement)
+      lastTracedLat: null, lastTracedLng: null,
+      // distance totale parcourue
+      totalDist: 0,
+      // état
+      isMoving: false,
+      // objets Leaflet
+      marker: null,
+      trail: [],        // liste de L.polyline (segments colorés)
+      // point de départ du segment en cours
+      segStart: null,
     };
-    updateAdminUI();
+    renderSidebar();
   });
+
   conn.on('data', (data) => {
-    if (!connectedPeers[peerId]) return;
-    const p = connectedPeers[peerId];
-    if (data.type === 'name') p.name = data.value || 'Tracker';
+    const p = peers[id];
+    if (!p) return;
+
+    if (data.type === 'name') {
+      p.name = data.value || 'Tracker';
+      renderSidebar();
+      return;
+    }
+
     if (data.type === 'gps') {
       const { lat, lng, speed } = data;
       p.speed = speed || 0;
-      if (!p.startPoint) {
-        p.startPoint = { lat, lng };
-        p.currentPoint = { lat, lng };
-        p.trailPoints = [{ lat, lng }];
-        p.marker = L.circleMarker([lat, lng], {
-          radius: 12, fillColor: '#2563eb', color: '#2563eb', weight: 2, opacity: 1, fillOpacity: 0.9
-        }).addTo(adminMap).bindPopup(popupHtml(p));
-        adminMap.setView([lat, lng], 14);
-      } else {
-        p.currentPoint = { lat, lng };
-        p.trailPoints.push({ lat, lng });
-        const dist = getDistance(p.startPoint.lat, p.startPoint.lng, lat, lng);
-        p.distance = dist;
-        p.isMoving = dist >= MIN_MOVE;
-        const col = p.isMoving ? '#ef4444' : '#2563eb';
-        if (p.marker) {
-          p.marker.setLatLng([lat, lng]);
-          p.marker.setStyle({ fillColor: col, color: col });
-          p.marker.setPopupContent(popupHtml(p));
-        }
-        if (p.polyline && adminMap.hasLayer(p.polyline)) adminMap.removeLayer(p.polyline);
-        p.polyline = L.polyline(p.trailPoints.map(pt => [pt.lat, pt.lng]), {
-          color: col, weight: p.isMoving ? 4 : 3,
-          opacity: p.isMoving ? 0.9 : 0.6,
-          dashArray: p.isMoving ? null : '5,5'
-        }).addTo(adminMap);
-        if (selectedPeerId === peerId) {
-          const b = adminMap.getBounds().extend([lat, lng]);
-          if (b.isValid()) adminMap.fitBounds(b, { padding: [50, 50], maxZoom: 16 });
-        }
+
+      // ── CAS 1 : première position → on place le point bleu ──
+      if (p.lat === null) {
+        p.lat = lat; p.lng = lng;
+        p.lastTracedLat = lat; p.lastTracedLng = lng;
+        p.segStart = { lat, lng };
+        p.isMoving = false;
+
+        // Marqueur bleu pulsant
+        p.marker = L.circleMarker([lat, lng], markerStyle(false))
+          .addTo(adminMap)
+          .bindPopup(popupHtml(p));
+
+        adminMap.setView([lat, lng], 15);
+        renderSidebar();
+        return;
       }
-      updateAdminUI();
+
+      // ── CAS 2 : positions suivantes ──
+      const distFromLast = getDistance(p.lastTracedLat, p.lastTracedLng, lat, lng);
+      p.lat = lat; p.lng = lng;
+
+      // A-t-il bougé de plus de MIN_MOVE_METERS depuis le dernier point tracé ?
+      if (distFromLast >= MIN_MOVE_METERS) {
+
+        // Tracer un segment de la dernière position tracée → maintenant
+        const segColor = '#ef4444'; // rouge car en mouvement
+        const seg = L.polyline(
+          [[p.lastTracedLat, p.lastTracedLng], [lat, lng]],
+          { color: segColor, weight: 4, opacity: 0.85 }
+        ).addTo(adminMap);
+        p.trail.push(seg);
+
+        // Mettre à jour la distance totale
+        p.totalDist += distFromLast;
+
+        // Mémoriser comme dernier point tracé
+        p.lastTracedLat = lat;
+        p.lastTracedLng = lng;
+        p.isMoving = true;
+
+      } else {
+        // Pas assez de mouvement → reste bleu
+        p.isMoving = false;
+      }
+
+      // Déplacer le marqueur et changer sa couleur
+      if (p.marker) {
+        p.marker.setLatLng([lat, lng]);
+        p.marker.setStyle(markerStyle(p.isMoving));
+        p.marker.setPopupContent(popupHtml(p));
+      }
+
+      // Si ce tracker est sélectionné → recentrer la carte
+      if (selectedId === id) {
+        adminMap.panTo([lat, lng]);
+      }
+
+      renderSidebar();
     }
   });
-  conn.on('close', () => {
-    const p = connectedPeers[peerId];
-    if (p) {
-      if (p.marker && adminMap.hasLayer(p.marker)) adminMap.removeLayer(p.marker);
-      if (p.polyline && adminMap.hasLayer(p.polyline)) adminMap.removeLayer(p.polyline);
-      delete connectedPeers[peerId];
-    }
-    if (selectedPeerId === peerId) selectedPeerId = null;
-    updateAdminUI();
-  });
-  conn.on('error', () => { delete connectedPeers[peerId]; updateAdminUI(); });
+
+  conn.on('close', () => removePeer(id));
+  conn.on('error', () => removePeer(id));
+}
+
+function removePeer(id) {
+  const p = peers[id];
+  if (!p) return;
+  if (p.marker && adminMap.hasLayer(p.marker)) adminMap.removeLayer(p.marker);
+  p.trail.forEach(seg => { if (adminMap.hasLayer(seg)) adminMap.removeLayer(seg); });
+  delete peers[id];
+  if (selectedId === id) selectedId = null;
+  renderSidebar();
+}
+
+/* styles du marqueur selon état */
+function markerStyle(moving) {
+  return moving
+    ? { radius: 12, fillColor: '#ef4444', color: '#fff', weight: 2, opacity: 1, fillOpacity: 0.95 }
+    : { radius: 12, fillColor: '#2563eb', color: '#fff', weight: 2, opacity: 1, fillOpacity: 0.95 };
 }
 
 function popupHtml(p) {
+  const etat = p.isMoving ? '🔴 EN MOUVEMENT' : '🔵 Arrêté';
   return `<b style="color:#f0f6ff">${p.name}</b><br>
-    <span style="color:#94a3b8">${p.isMoving ? '🔴 EN MOUVEMENT' : '🔵 Connecté'}</span><br>
-    <span style="color:#94a3b8;font-size:11px">Dist: ${fmtDist(p.distance)}</span>`;
+    <span style="color:#94a3b8">${etat}</span><br>
+    <span style="color:#94a3b8;font-size:11px">Distance: ${fmtDist(p.totalDist)} · ${(p.speed*3.6).toFixed(1)} km/h</span>`;
 }
 
-function updateAdminUI() {
-  const peers = Object.entries(connectedPeers);
-  document.getElementById('peerCount').textContent = peers.length;
-  document.getElementById('aClearBtn').disabled = peers.length === 0;
-  document.getElementById('aLocateBtn').disabled = !selectedPeerId;
-  const list = document.getElementById('peerList');
-  if (!peers.length) {
-    list.innerHTML = '<div class="empty"><div class="empty-icon">📡</div>En attente de trackers…</div>';
+/* ═══════════════════════════════════════════
+   ADMIN — SIDEBAR UI
+═══════════════════════════════════════════ */
+function renderSidebar() {
+  const list = Object.entries(peers);
+  document.getElementById('peerCount').textContent = list.length;
+  document.getElementById('aClearBtn').disabled = list.length === 0;
+  document.getElementById('aLocateBtn').disabled = !selectedId;
+
+  const el = document.getElementById('peerList');
+  if (!list.length) {
+    el.innerHTML = '<div class="empty"><div class="empty-icon">📡</div>En attente de trackers…</div>';
     document.getElementById('adminInfoPanel').style.display = 'none';
     return;
   }
-  list.innerHTML = peers.map(([id, p]) => `
-    <div class="peer-item ${selectedPeerId === id ? 'active' : ''}" onclick="selectPeer('${id}')">
+
+  el.innerHTML = list.map(([id, p]) => `
+    <div class="peer-item ${selectedId === id ? 'active' : ''}" onclick="selectPeer('${id}')">
       <div class="peer-dot ${p.isMoving ? 'moving' : ''}"></div>
       <div style="flex:1">
         <div class="peer-name">${p.name}</div>
-        <div class="peer-sub">${fmtDist(p.distance)} · ${p.trailPoints.length} pts</div>
+        <div class="peer-sub">${fmtDist(p.totalDist)} · ${p.trail.length} pts</div>
       </div>
       <span class="badge ${p.isMoving ? 'moving' : 'idle'}">${p.isMoving ? '🔴' : '🔵'}</span>
     </div>
   `).join('');
-  if (selectedPeerId && connectedPeers[selectedPeerId]) {
-    const p = connectedPeers[selectedPeerId];
+
+  if (selectedId && peers[selectedId]) {
+    const p = peers[selectedId];
     document.getElementById('adminInfoPanel').style.display = 'block';
-    document.getElementById('aState').textContent = p.isMoving ? '🔴 EN MOUVEMENT' : '🔵 CONNECTÉ';
-    document.getElementById('aDist').textContent = fmtDist(p.distance);
-    document.getElementById('aSpeed').textContent = (p.speed * 3.6).toFixed(1) + ' km/h';
-    document.getElementById('aLat').textContent = p.currentPoint?.lat.toFixed(5) || '--';
-    document.getElementById('aLon').textContent = p.currentPoint?.lng.toFixed(5) || '--';
+    document.getElementById('aState').textContent   = p.isMoving ? '🔴 EN MOUVEMENT' : '🔵 ARRÊTÉ';
+    document.getElementById('aDist').textContent    = fmtDist(p.totalDist);
+    document.getElementById('aSpeed').textContent   = (p.speed * 3.6).toFixed(1) + ' km/h';
+    document.getElementById('aLat').textContent     = p.lat != null ? p.lat.toFixed(5) : '--';
+    document.getElementById('aLon').textContent     = p.lng != null ? p.lng.toFixed(5) : '--';
   } else {
     document.getElementById('adminInfoPanel').style.display = 'none';
   }
 }
+
 function selectPeer(id) {
-  selectedPeerId = id;
+  selectedId = id;
   document.getElementById('aLocateBtn').disabled = false;
-  updateAdminUI();
-}
-function locateSelected() {
-  if (!selectedPeerId || !connectedPeers[selectedPeerId]?.currentPoint) return;
-  const { lat, lng } = connectedPeers[selectedPeerId].currentPoint;
-  adminMap.setView([lat, lng], 18);
-  const c = L.circle([lat, lng], { color: '#f59e0b', fillColor: '#f59e0b', fillOpacity: .15, radius: 50, weight: 2 }).addTo(adminMap);
-  setTimeout(() => { if (adminMap.hasLayer(c)) adminMap.removeLayer(c); }, 3000);
-}
-function adminClearAll() {
-  if (!confirm('Effacer tous les trackers de la carte ?')) return;
-  Object.entries(connectedPeers).forEach(([id, p]) => {
-    if (p.marker && adminMap.hasLayer(p.marker)) adminMap.removeLayer(p.marker);
-    if (p.polyline && adminMap.hasLayer(p.polyline)) adminMap.removeLayer(p.polyline);
-    p.startPoint = null; p.currentPoint = null;
-    p.trailPoints = []; p.distance = 0; p.isMoving = false;
-  });
-  selectedPeerId = null;
-  updateAdminUI();
+  renderSidebar();
+  if (peers[id]?.lat != null) adminMap.setView([peers[id].lat, peers[id].lng], 16);
 }
 
-// ── TRACKER ──
+function locateSelected() {
+  const p = peers[selectedId];
+  if (!p || p.lat == null) return;
+  adminMap.setView([p.lat, p.lng], 18);
+  const ring = L.circle([p.lat, p.lng],
+    { color: '#f59e0b', fillColor: '#f59e0b', fillOpacity: .15, radius: 40, weight: 2 })
+    .addTo(adminMap);
+  setTimeout(() => { if (adminMap.hasLayer(ring)) adminMap.removeLayer(ring); }, 3000);
+}
+
+function adminClearAll() {
+  if (!confirm('Effacer toutes les traces de la carte ?')) return;
+  Object.entries(peers).forEach(([id, p]) => {
+    p.trail.forEach(seg => { if (adminMap.hasLayer(seg)) adminMap.removeLayer(seg); });
+    p.trail = [];
+    p.totalDist = 0;
+    p.lastTracedLat = p.lat;
+    p.lastTracedLng = p.lng;
+    p.isMoving = false;
+    if (p.marker) { p.marker.setStyle(markerStyle(false)); p.marker.setPopupContent(popupHtml(p)); }
+  });
+  selectedId = null;
+  renderSidebar();
+}
+
+/* ═══════════════════════════════════════════
+   TRACKER — CONNEXION
+═══════════════════════════════════════════ */
 function setStatus(icon, text, sub, color) {
   document.getElementById('statusCard').innerHTML = `
     <div class="status-icon">${icon}</div>
     <div class="status-text" style="${color ? 'color:' + color : ''}">${text}</div>
-    <div class="status-sub">${sub}</div>
+    <div class="status-sub">${sub || ''}</div>
   `;
 }
 
 function trackerConnect() {
   const code = document.getElementById('codeInput').value.trim().toUpperCase();
-  if (code.length < 4) { setStatus('⚠️', 'Code invalide', 'Le code doit faire au moins 4 caractères', '#f59e0b'); return; }
+  if (code.length < 4) {
+    setStatus('⚠️', 'Code invalide', 'Le code doit faire au moins 4 caractères', '#f59e0b');
+    return;
+  }
   const name = document.getElementById('trackerName').value.trim() || 'Tracker';
 
-  // Stopper tout GPS précédent
+  // Arrêter GPS et connexion précédente si existante
   if (trackerWatchId) { navigator.geolocation.clearWatch(trackerWatchId); trackerWatchId = null; }
+  if (trackerConn) { try { trackerConn.close(); } catch(e){} trackerConn = null; }
 
-  setStatus('⏳', 'Connexion…', 'Connexion au serveur PeerJS…', null);
+  setStatus('⏳', 'Connexion…', 'Connexion au serveur PeerJS…');
 
   const myPeer = new Peer({ host: '0.peerjs.com', port: 443, secure: true, path: '/' });
 
-  myPeer.on('open', (myId) => {
-    dbg('Peer ouvert: ' + myId);
-    setStatus('🔗', "Connexion à l'admin…", 'Code: ' + code, null);
+  myPeer.on('open', () => {
+    setStatus('🔗', "Connexion à l'admin…", 'Code: ' + code);
     const conn = myPeer.connect('fg-admin-' + code, { reliable: true });
 
     conn.on('open', () => {
-      dbg('Connexion admin ouverte');
       trackerConn = conn;
       conn.send({ type: 'name', value: name });
-      setStatus('🛰️', 'Acquisition GPS…', 'Démarrage du GPS…', null);
       document.getElementById('gpsBox').style.display = 'block';
-      startTrackerGPS(conn);
+      setStatus('🛰️', 'GPS en cours…', 'Acquisition du signal, patientez…');
+      startGPS(conn);
     });
 
     conn.on('close', () => {
-      dbg('Connexion fermée');
-      setStatus('❌', 'Déconnecté', 'La connexion a été fermée. Reconnectez-vous.', '#ef4444');
+      setStatus('❌', 'Déconnecté', 'Connexion fermée — relancez la connexion', '#ef4444');
       document.getElementById('gpsBox').style.display = 'none';
       if (trackerWatchId) { navigator.geolocation.clearWatch(trackerWatchId); trackerWatchId = null; }
     });
 
-    conn.on('error', (e) => {
-      dbg('Erreur conn: ' + e);
-      setStatus('❌', 'Erreur connexion', String(e), '#ef4444');
-    });
+    conn.on('error', () => setStatus('❌', 'Erreur connexion', 'Réessayez', '#ef4444'));
   });
 
   myPeer.on('error', (err) => {
-    dbg('Erreur peer: ' + err.type);
-    if (err.type === 'peer-unavailable') {
-      setStatus('❌', 'Admin introuvable', 'Vérifiez le code « ' + code + ' » et réessayez', '#ef4444');
-    } else {
+    if (err.type === 'peer-unavailable')
+      setStatus('❌', 'Admin introuvable', 'Vérifiez le code « ' + code + ' »', '#ef4444');
+    else
       setStatus('❌', 'Erreur réseau', err.type, '#ef4444');
-    }
   });
 }
 
-// ── BARRE DE QUALITÉ GPS ──
-function updateGpsQuality(accuracy) {
-  const fill = document.getElementById('gpsProgFill');
-  const lbl  = document.getElementById('gpsProgLbl');
-  if (!fill) return;
-  // < 10m = excellent, 10-30 = bon, 30-80 = moyen, >80 = mauvais
-  let pct, cls, txt;
-  if (accuracy <= 10)      { pct = 100; cls = '';     txt = `✅ Excellent (${Math.round(accuracy)} m)`; }
-  else if (accuracy <= 30) { pct = 75;  cls = '';     txt = `🟢 Bon (${Math.round(accuracy)} m)`; }
-  else if (accuracy <= 80) { pct = 45;  cls = 'warn'; txt = `🟡 Moyen (${Math.round(accuracy)} m)`; }
-  else                     { pct = 15;  cls = 'bad';  txt = `🔴 Faible (${Math.round(accuracy)} m)`; }
-  fill.style.width = pct + '%';
-  fill.className = 'gps-progress-fill ' + cls;
-  document.getElementById('gpsProgLbl').textContent = txt;
-}
-
-// ── GPS — VERSION CORRIGÉE ──
-function startTrackerGPS(conn) {
+/* ═══════════════════════════════════════════
+   TRACKER — GPS
+   Logique :
+   - Première position reçue → envoi immédiat (point bleu sur la carte)
+   - Positions suivantes → envoi seulement si déplacement ≥ MIN_MOVE_METERS
+     (ce qui déclenchera le rouge côté admin)
+   - On accepte jusqu'à 300m de précision pour ne rien bloquer
+═══════════════════════════════════════════ */
+function startGPS(conn) {
   if (!('geolocation' in navigator)) {
-    setStatus('❌', 'GPS non disponible', 'Votre appareil ne supporte pas la géolocalisation', '#ef4444');
+    setStatus('❌', 'GPS non disponible', 'Appareil non compatible', '#ef4444');
     return;
   }
 
-  // Paramètres assouplis et robustes
-  const MAX_ACCURACY   = 200;   // accepter jusqu'à 200m (le filtre se voit dans la barre qualité)
-  const GOOD_ACCURACY  = 80;    // en dessous = on envoie
-  const MIN_SEND_DIST  = 3;     // envoyer si ≥ 3m de déplacement (assoupli)
-  const WARMUP_MS      = 8000;  // warmup réduit à 8s
-  const startTime      = Date.now();
-  let lastSent         = null;
-  let firstPositionReceived = false;
-  let positionCount    = 0;
-
-  dbg('Démarrage watchPosition');
+  const MAX_ACC = 300;       // rejeter au-delà de 300m (GPS vraiment mort)
+  const SEND_DIST = 10;      // envoyer si déplacement ≥ 10m
+  let lastSent = null;       // null = pas encore de première position
 
   trackerWatchId = navigator.geolocation.watchPosition(
     (pos) => {
       const { latitude: lat, longitude: lng, accuracy, speed } = pos.coords;
-      positionCount++;
 
-      dbg(`Pos #${positionCount} acc=${Math.round(accuracy)}m lat=${lat.toFixed(4)} lng=${lng.toFixed(4)}`);
-
-      // Toujours afficher les valeurs brutes immédiatement
+      // Afficher valeurs brutes dans l'interface
       document.getElementById('tLat').textContent = lat.toFixed(5);
       document.getElementById('tLon').textContent = lng.toFixed(5);
-      document.getElementById('tAcc').textContent = accuracy ? Math.round(accuracy) + ' m' : '--';
-      document.getElementById('tSpd').textContent = speed != null ? (speed * 3.6).toFixed(1) + ' km/h' : '0 km/h';
+      document.getElementById('tAcc').textContent = Math.round(accuracy) + ' m';
+      document.getElementById('tSpd').textContent =
+        speed != null ? (speed * 3.6).toFixed(1) + ' km/h' : '0 km/h';
+      updateAccBar(accuracy);
 
-      // Barre de qualité
-      updateGpsQuality(accuracy);
-
-      // ① Signal trop mauvais → on affiche mais on n'envoie pas
-      if (accuracy > MAX_ACCURACY) {
-        setStatus('🔍', 'Signal GPS très faible', `Précision: ${Math.round(accuracy)} m — bougez à l'extérieur`, '#f59e0b');
+      // GPS trop imprécis → on affiche mais on n'envoie pas
+      if (accuracy > MAX_ACC) {
+        setStatus('🔍', 'Signal GPS faible', `Précision ${Math.round(accuracy)} m — allez à l'extérieur`, '#f59e0b');
         return;
       }
 
-      // ② Phase de chauffe — afficher mais ne pas envoyer encore
-      const elapsed = Date.now() - startTime;
-      if (elapsed < WARMUP_MS && !firstPositionReceived) {
-        const secLeft = Math.ceil((WARMUP_MS - elapsed) / 1000);
-        setStatus('🛰️', 'Acquisition GPS…', `Précision: ${Math.round(accuracy)} m — encore ~${secLeft}s`, null);
-        // Exception : si le signal est déjà très bon, on envoie quand même
-        if (accuracy > GOOD_ACCURACY) return;
+      // ── PREMIÈRE POSITION : envoi immédiat → point bleu sur la carte ──
+      if (!lastSent) {
+        lastSent = { lat, lng };
+        send(conn, lat, lng, speed);
+        setStatus('✅', 'Point affiché sur la carte', `Précision ${Math.round(accuracy)} m`, '#22c55e');
+        return;
       }
 
-      // ③ Filtre de déplacement minimal (sauf pour la toute première position)
-      if (lastSent) {
-        const d = getDistance(lastSent.lat, lastSent.lng, lat, lng);
-        dbg(`Distance depuis dernier envoi: ${Math.round(d)} m`);
-        if (d < MIN_SEND_DIST) {
-          // Garder le statut à jour sans respammer
-          setStatus('✅', 'En position', `Précision: ${Math.round(accuracy)} m · En attente de mouvement`, '#22c55e');
-          return;
-        }
-      }
-
-      // ④ Envoi
-      lastSent = { lat, lng };
-      firstPositionReceived = true;
-
-      const qualLabel = accuracy <= 30 ? '📡 Excellent' : accuracy <= 80 ? '🟡 Moyen' : '🟠 Faible';
-      setStatus('✅', 'Position envoyée', `${qualLabel} · ${Math.round(accuracy)} m de précision`, '#22c55e');
-
-      if (conn && conn.open) {
-        conn.send({ type: 'gps', lat, lng, speed: speed || 0 });
-        dbg(`Envoyé → lat=${lat.toFixed(5)} lng=${lng.toFixed(5)}`);
+      // ── POSITIONS SUIVANTES : envoyer seulement si ≥ 10m ──
+      const d = getDistance(lastSent.lat, lastSent.lng, lat, lng);
+      if (d >= SEND_DIST) {
+        lastSent = { lat, lng };
+        send(conn, lat, lng, speed);
+        setStatus('✅', `Déplacé de ${Math.round(d)} m — tracé mis à jour`, `Précision ${Math.round(accuracy)} m`, '#22c55e');
       } else {
-        dbg('Connexion fermée — impossible d\'envoyer');
-        setStatus('❌', 'Connexion perdue', 'Reconnectez-vous depuis le menu', '#ef4444');
+        setStatus('✅', 'En position', `Précision ${Math.round(accuracy)} m · Bougez de 10m pour tracer`, '#22c55e');
       }
     },
     (err) => {
-      dbg('Erreur GPS: ' + err.code + ' ' + err.message);
-      let msg = err.message;
-      let hint = '';
+      let msg = '', hint = '';
       switch (err.code) {
-        case 1: // PERMISSION_DENIED
-          msg = 'Permission GPS refusée';
-          hint = 'Allez dans Paramètres → Localisation et autorisez ce site';
-          break;
-        case 2: // POSITION_UNAVAILABLE
-          msg = 'Position GPS indisponible';
-          hint = 'Vérifiez que le GPS est activé et allez à l\'extérieur';
-          break;
-        case 3: // TIMEOUT
+        case 1: msg = 'Permission GPS refusée'; hint = 'Autorisez la localisation dans les paramètres'; break;
+        case 2: msg = 'GPS indisponible'; hint = 'Activez le GPS et allez à l\'extérieur'; break;
+        case 3:
           msg = 'Délai GPS dépassé';
-          hint = 'Nouvelle tentative en cours…';
-          // Retry automatique après 3s
+          hint = 'Nouvelle tentative…';
           setTimeout(() => {
             if (trackerConn && trackerConn.open) {
-              dbg('Retry GPS après timeout');
               if (trackerWatchId) { navigator.geolocation.clearWatch(trackerWatchId); trackerWatchId = null; }
-              startTrackerGPS(conn);
+              startGPS(conn);
             }
           }, 3000);
           break;
       }
-      setStatus('⚠️', msg, hint || err.message, '#f59e0b');
+      setStatus('⚠️', msg, hint, '#f59e0b');
     },
-    {
-      enableHighAccuracy: true,
-      maximumAge: 5000,    // accepter une position vieille de 5s max (réduit les délais)
-      timeout: 30000       // timeout porté à 30s pour les GPS lents
-    }
+    { enableHighAccuracy: true, maximumAge: 5000, timeout: 30000 }
   );
 }
 
-// ── UTILS ──
-function getDistance(la1, lo1, la2, lo2) {
-  const R = 6371000, dL = (la2 - la1) * Math.PI / 180, dO = (lo2 - lo1) * Math.PI / 180;
-  const a = Math.sin(dL / 2) ** 2 + Math.cos(la1 * Math.PI / 180) * Math.cos(la2 * Math.PI / 180) * Math.sin(dO / 2) ** 2;
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+function send(conn, lat, lng, speed) {
+  if (conn && conn.open) conn.send({ type: 'gps', lat, lng, speed: speed || 0 });
 }
-function fmtDist(d) { return d >= 1000 ? (d / 1000).toFixed(2) + ' km' : Math.round(d) + ' m'; }
 
-window.addEventListener('resize', () => { if (adminMap) setTimeout(() => adminMap.invalidateSize(), 100); });
-window.addEventListener('orientationchange', () => { if (adminMap) setTimeout(() => adminMap.invalidateSize(), 200); });
+function updateAccBar(accuracy) {
+  const fill = document.getElementById('accFill');
+  const lbl  = document.getElementById('accLbl');
+  if (!fill) return;
+  let pct, cls, txt;
+  if      (accuracy <= 10)  { pct = 100; cls = '';     txt = `✅ Excellent (${Math.round(accuracy)} m)`; }
+  else if (accuracy <= 30)  { pct = 75;  cls = '';     txt = `🟢 Bon (${Math.round(accuracy)} m)`; }
+  else if (accuracy <= 80)  { pct = 45;  cls = 'warn'; txt = `🟡 Moyen (${Math.round(accuracy)} m)`; }
+  else if (accuracy <= 200) { pct = 25;  cls = 'warn'; txt = `🟠 Faible (${Math.round(accuracy)} m)`; }
+  else                      { pct = 10;  cls = 'bad';  txt = `🔴 Très faible (${Math.round(accuracy)} m)`; }
+  fill.style.width = pct + '%';
+  fill.className = 'acc-fill ' + cls;
+  lbl.textContent = txt;
+}
+
+/* ═══════════════════════════════════════════
+   UTILS
+═══════════════════════════════════════════ */
+function getDistance(la1, lo1, la2, lo2) {
+  const R = 6371000;
+  const dL = (la2 - la1) * Math.PI / 180;
+  const dO = (lo2 - lo1) * Math.PI / 180;
+  const a = Math.sin(dL/2)**2 +
+    Math.cos(la1*Math.PI/180) * Math.cos(la2*Math.PI/180) * Math.sin(dO/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+function fmtDist(d) {
+  return d >= 1000 ? (d/1000).toFixed(2) + ' km' : Math.round(d) + ' m';
+}
+
+window.addEventListener('resize', () => {
+  if (adminMap) setTimeout(() => adminMap.invalidateSize(), 100);
+});
+window.addEventListener('orientationchange', () => {
+  if (adminMap) setTimeout(() => adminMap.invalidateSize(), 200);
+});
 </script>
 </body>
 </html>
