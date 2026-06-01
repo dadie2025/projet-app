@@ -19,7 +19,6 @@
 }
 html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-family:'Outfit',sans-serif;color:var(--text);}
 
-/* ── SPLASH ── */
 #splash{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px;padding:24px;}
 .splash-logo{font-size:56px;animation:float 3s ease-in-out infinite;}
 @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
@@ -33,7 +32,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 .mode-name{font-size:16px;font-weight:700;margin-bottom:3px;}
 .mode-desc{font-size:12px;color:var(--muted);line-height:1.5;}
 
-/* ── PASSWORD ── */
 #pwModal{position:fixed;inset:0;z-index:99999;background:rgba(8,15,30,.92);display:none;align-items:center;justify-content:center;padding:24px;}
 #pwModal.show{display:flex;}
 .pw-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 24px;width:100%;max-width:320px;text-align:center;}
@@ -47,7 +45,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 .pw-cancel{width:100%;padding:10px;background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:9px;font-family:'Outfit',sans-serif;font-size:13px;cursor:pointer;}
 .pw-cancel:hover{border-color:var(--red);color:var(--red);}
 
-/* ── ADMIN ── */
 #adminView{display:none;width:100%;height:100vh;}
 .admin-grid{display:grid;grid-template-columns:1fr 380px;height:100vh;}
 #adminMap{width:100%;height:100%;}
@@ -93,7 +90,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 .empty{text-align:center;padding:16px;color:var(--muted);font-size:12px;}
 .empty-icon{font-size:24px;margin-bottom:6px;}
 
-/* ── TRACKER ── */
 #trackerView{display:none;flex-direction:column;align-items:center;justify-content:flex-start;height:100dvh;padding:20px 16px;gap:14px;overflow-y:auto;background:var(--bg);}
 .tracker-header{text-align:center;padding-top:16px;}
 .t-logo{font-size:40px;margin-bottom:8px;}
@@ -125,7 +121,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 .acc-fill.bad{background:var(--red);}
 .back-btn{padding:10px 20px;background:var(--surface);border:1px solid var(--border);color:var(--muted);border-radius:9px;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif;}
 
-/* Leaflet popup */
 .leaflet-popup-content-wrapper{background:var(--surface)!important;color:var(--text)!important;border:1px solid var(--border)!important;border-radius:8px!important;box-shadow:0 8px 32px rgba(0,0,0,.6)!important;}
 .leaflet-popup-tip{background:var(--surface)!important;}
 .leaflet-popup-content{font-family:'Outfit',sans-serif!important;font-size:13px!important;margin:10px!important;}
@@ -140,7 +135,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 </head>
 <body>
 
-<!-- SPLASH -->
 <div id="splash">
  <div class="splash-logo">🌲</div>
  <div>
@@ -165,7 +159,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
  </div>
 </div>
 
-<!-- PASSWORD MODAL -->
 <div id="pwModal">
  <div class="pw-box">
    <div class="pw-icon">🔒</div>
@@ -179,7 +172,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
  </div>
 </div>
 
-<!-- ADMIN VIEW -->
 <div id="adminView">
  <div class="admin-grid">
    <div id="adminMap"></div>
@@ -189,7 +181,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
        <p>Console Admin</p>
      </div>
      <div class="sidebar-body">
-
        <div>
          <div class="section-label">📡 Code de session</div>
          <div class="session-box">
@@ -200,14 +191,12 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
            <div class="session-hint" id="sessionHint">Génération en cours…</div>
          </div>
        </div>
-
        <div>
          <div class="section-label">📱 Trackers connectés (<span id="peerCount">0</span>)</div>
          <div class="peer-list" id="peerList">
            <div class="empty"><div class="empty-icon">📡</div>En attente de trackers…</div>
          </div>
        </div>
-
        <div id="adminInfoPanel" style="display:none;">
          <div class="section-label">📍 Position sélectionnée</div>
          <div class="info-grid">
@@ -218,7 +207,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
            <div class="info-card"><div class="info-lbl">Longitude</div><div class="info-val" id="aLon">--</div></div>
          </div>
        </div>
-
      </div>
      <div class="btn-row">
        <button class="btn locate" id="aLocateBtn" onclick="locateSelected()" disabled>📍 Localiser</button>
@@ -228,19 +216,16 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
  </div>
 </div>
 
-<!-- TRACKER VIEW -->
 <div id="trackerView">
  <div class="tracker-header">
    <div class="t-logo">📱</div>
    <h2>Mode Tracker</h2>
    <p>Envoi de position vers l'admin</p>
  </div>
-
  <div class="card">
    <h3>Votre nom / ID</h3>
    <input class="name-input" id="trackerName" placeholder="ex: Bois A, Camion 1…" maxlength="30">
  </div>
-
  <div class="card">
    <h3>Code de session Admin</h3>
    <div class="input-row">
@@ -249,13 +234,11 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
      <button class="connect-btn" onclick="trackerConnect()">Connecter</button>
    </div>
  </div>
-
  <div class="status-card" id="statusCard">
    <div class="status-icon">⏳</div>
    <div class="status-text">En attente</div>
    <div class="status-sub">Entrez le code admin et appuyez sur Connecter</div>
  </div>
-
  <div class="card" id="gpsBox" style="display:none;">
    <h3>📡 Ma position GPS</h3>
    <div class="gps-grid">
@@ -269,21 +252,14 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
      <div class="acc-bar"><div class="acc-fill" id="accFill"></div></div>
    </div>
  </div>
-
  <button class="back-btn" onclick="backToSplash()">← Revenir au choix</button>
  <div style="height:24px;"></div>
 </div>
 
 <script>
-/* ═══════════════════════════════════════════
-   CONFIGURATION
-═══════════════════════════════════════════ */
 var ADMIN_PASSWORD = 'Dadie123.com';
-var MIN_MOVE_METERS = 10;
+var MIN_MOVE_METERS = 25;  // <-- TU PEUX AUGMENTER CE CHIFFRE (ex: 50, 100, etc.)
 
-/* ═══════════════════════════════════════════
-   ÉTAT GLOBAL
-═══════════════════════════════════════════ */
 var adminMap, adminPeer;
 var peers = {};
 var selectedId = null;
@@ -291,9 +267,6 @@ var trackerWatchId = null;
 var trackerConn = null;
 var myTrackerPeer = null;
 
-/* ═══════════════════════════════════════════
-   PASSWORD
-═══════════════════════════════════════════ */
 function askPassword() {
  document.getElementById('pwInput').value = '';
  document.getElementById('pwError').textContent = '';
@@ -314,9 +287,6 @@ function checkPassword() {
  }
 }
 
-/* ═══════════════════════════════════════════
-   NAVIGATION
-═══════════════════════════════════════════ */
 function enterMode(mode) {
  document.getElementById('splash').style.display = 'none';
  if (mode === 'admin') {
@@ -334,9 +304,6 @@ function backToSplash() {
  document.getElementById('splash').style.display = 'flex';
 }
 
-/* ═══════════════════════════════════════════
-   ADMIN — INIT CARTE
-═══════════════════════════════════════════ */
 function initAdmin() {
  adminMap = L.map('adminMap', { zoomControl: false }).setView([6.8276, -5.2893], 13);
  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -385,29 +352,26 @@ function copyCode() {
  }).catch(function() { alert('Code: ' + code); });
 }
 
-/* ═══════════════════════════════════════════
-   ADMIN — GESTION DES PAIRS (CORRIGÉ)
-═══════════════════════════════════════════ */
+/* CORRIGÉ: Suivi en temps réel fonctionnel */
 function handleNewPeer(conn) {
- var peerId = conn.peer;  // <-- CORRIGÉ: utiliser peerId au lieu de id
+ var peerId = conn.peer;
 
  conn.on('open', function() {
    peers[peerId] = {
      conn: conn,
      name: 'Tracker…',
      lat: null, lng: null, speed: 0,
-     lastTracedLat: null, lastTracedLng: null,
+     lastLat: null, lastLng: null,  // <-- Dernière position REÇUE (pas seulement tracée)
      totalDist: 0,
      isMoving: false,
      marker: null,
-     trail: [],
-     segStart: null
+     trail: []
    };
    renderSidebar();
  });
 
  conn.on('data', function(data) {
-   var p = peers[peerId];  // <-- CORRIGÉ: utiliser peerId
+   var p = peers[peerId];
    if (!p) return;
 
    if (data.type === 'name') {
@@ -419,13 +383,13 @@ function handleNewPeer(conn) {
    if (data.type === 'gps') {
      var lat = data.lat;
      var lng = data.lng;
-     var speed = data.speed;
-     p.speed = speed || 0;
+     var speed = data.speed || 0;
+     p.speed = speed;
 
+     // PREMIÈRE POSITION
      if (p.lat === null) {
        p.lat = lat; p.lng = lng;
-       p.lastTracedLat = lat; p.lastTracedLng = lng;
-       p.segStart = { lat: lat, lng: lng };
+       p.lastLat = lat; p.lastLng = lng;
        p.isMoving = false;
 
        p.marker = L.circleMarker([lat, lng], markerStyle(false))
@@ -437,31 +401,34 @@ function handleNewPeer(conn) {
        return;
      }
 
-     var distFromLast = getDistance(p.lastTracedLat, p.lastTracedLng, lat, lng);
-     p.lat = lat; p.lng = lng;
+     // POSITION SUIVANTE : calculer distance depuis DERNIÈRE position REÇUE
+     var dist = getDistance(p.lastLat, p.lastLng, lat, lng);
+     p.lastLat = lat; p.lastLng = lng;  // <-- Mettre à jour TOUTES les positions reçues
 
-     if (distFromLast >= MIN_MOVE_METERS) {
+     // Si déplacement >= MIN_MOVE_METERS → rouge + tracer ligne
+     if (dist >= MIN_MOVE_METERS) {
        var seg = L.polyline(
-         [[p.lastTracedLat, p.lastTracedLng], [lat, lng]],
+         [[p.lat, p.lng], [lat, lng]],
          { color: '#ef4444', weight: 4, opacity: 0.85 }
        ).addTo(adminMap);
        p.trail.push(seg);
-
-       p.totalDist += distFromLast;
-       p.lastTracedLat = lat;
-       p.lastTracedLng = lng;
+       p.totalDist += dist;
        p.isMoving = true;
      } else {
        p.isMoving = false;
      }
 
+     // Mettre à jour la position courante
+     p.lat = lat; p.lng = lng;
+
+     // Mise à jour du marqueur
      if (p.marker) {
        p.marker.setLatLng([lat, lng]);
        p.marker.setStyle(markerStyle(p.isMoving));
        p.marker.setPopupContent(popupHtml(p));
      }
 
-     if (selectedId === peerId) {  // <-- CORRIGÉ: utiliser peerId
+     if (selectedId === peerId) {
        adminMap.panTo([lat, lng]);
      }
 
@@ -469,11 +436,11 @@ function handleNewPeer(conn) {
    }
  });
 
- conn.on('close', function() { removePeer(peerId); });  // <-- CORRIGÉ
- conn.on('error', function() { removePeer(peerId); });  // <-- CORRIGÉ
+ conn.on('close', function() { removePeer(peerId); });
+ conn.on('error', function() { removePeer(peerId); });
 }
 
-function removePeer(peerId) {  // <-- CORRIGÉ paramètre
+function removePeer(peerId) {
  var p = peers[peerId];
  if (!p) return;
  if (p.marker && adminMap.hasLayer(p.marker)) adminMap.removeLayer(p.marker);
@@ -490,15 +457,12 @@ function markerStyle(moving) {
 }
 
 function popupHtml(p) {
- var etat = p.isMoving ? '🔴 EN MOUVEMENT' : '🔵 Arrete';
+ var etat = p.isMoving ? '🔴 EN MOUVEMENT' : '🔵 Arrêté';
  return '<b style="color:#f0f6ff">' + p.name + '</b><br>' +
    '<span style="color:#94a3b8">' + etat + '</span><br>' +
    '<span style="color:#94a3b8;font-size:11px">Distance: ' + fmtDist(p.totalDist) + ' · ' + (p.speed * 3.6).toFixed(1) + ' km/h</span>';
 }
 
-/* ═══════════════════════════════════════════
-   ADMIN — SIDEBAR UI
-═══════════════════════════════════════════ */
 function renderSidebar() {
  var list = Object.entries(peers);
  document.getElementById('peerCount').textContent = list.length;
@@ -528,7 +492,7 @@ function renderSidebar() {
  if (selectedId && peers[selectedId]) {
    var p = peers[selectedId];
    document.getElementById('adminInfoPanel').style.display = 'block';
-   document.getElementById('aState').textContent   = p.isMoving ? '🔴 EN MOUVEMENT' : '🔵 ARRETE';
+   document.getElementById('aState').textContent   = p.isMoving ? '🔴 EN MOUVEMENT' : '🔵 ARRÊTÉ';
    document.getElementById('aDist').textContent    = fmtDist(p.totalDist);
    document.getElementById('aSpeed').textContent   = (p.speed * 3.6).toFixed(1) + ' km/h';
    document.getElementById('aLat').textContent     = p.lat != null ? p.lat.toFixed(5) : '--';
@@ -562,8 +526,6 @@ function adminClearAll() {
    p.trail.forEach(function(seg) { if (adminMap.hasLayer(seg)) adminMap.removeLayer(seg); });
    p.trail = [];
    p.totalDist = 0;
-   p.lastTracedLat = p.lat;
-   p.lastTracedLng = p.lng;
    p.isMoving = false;
    if (p.marker) { p.marker.setStyle(markerStyle(false)); p.marker.setPopupContent(popupHtml(p)); }
  });
@@ -571,9 +533,6 @@ function adminClearAll() {
  renderSidebar();
 }
 
-/* ═══════════════════════════════════════════
-   TRACKER — CONNEXION
-═══════════════════════════════════════════ */
 function setStatus(icon, text, sub, color) {
  document.getElementById('statusCard').innerHTML =
    '<div class="status-icon">' + icon + '</div>' +
@@ -648,9 +607,6 @@ function trackerConnect() {
  }, 300);
 }
 
-/* ═══════════════════════════════════════════
-   TRACKER — GPS
-═══════════════════════════════════════════ */
 function startGPS(conn) {
  if (!('geolocation' in navigator)) {
    setStatus('❌', 'GPS non disponible', 'Appareil non compatible', '#ef4444');
@@ -658,8 +614,8 @@ function startGPS(conn) {
  }
 
  var MAX_ACC   = 300;
- var SEND_DIST = 25;
- var SMOOTH    = 8;
+ var SEND_DIST = 10;  // <-- Envoi toutes les 10m (plus fréquent pour un suivi fluide)
+ var SMOOTH    = 3;   // Moins de lissage pour plus de réactivité
 
  var lastSent  = null;
  var history   = [];
@@ -709,14 +665,14 @@ function startGPS(conn) {
        send(conn, avg.lat, avg.lng, speed);
        setStatus('✅', 'Déplacé de ' + Math.round(d) + ' m', 'Précision ' + Math.round(accuracy) + ' m', '#22c55e');
      } else {
-       setStatus('✅', 'En position', 'Précision ' + Math.round(accuracy) + ' m · immobile (' + Math.round(d) + ' m de dérive)', '#22c55e');
+       setStatus('✅', 'En position', 'Précision ' + Math.round(accuracy) + ' m · immobile (' + Math.round(d) + ' m)', '#22c55e');
      }
    },
    function(err) {
      var msg = '', hint = '';
      switch (err.code) {
-       case 1: msg = 'Permission GPS refusée'; hint = 'Autorisez la localisation dans les paramètres'; break;
-       case 2: msg = 'GPS indisponible'; hint = 'Activez le GPS et allez à l\'extérieur'; break;
+       case 1: msg = 'Permission GPS refusée'; hint = 'Autorisez la localisation'; break;
+       case 2: msg = 'GPS indisponible'; hint = 'Activez le GPS'; break;
        case 3:
          msg = 'Délai GPS dépassé';
          hint = 'Nouvelle tentative…';
@@ -753,9 +709,6 @@ function updateAccBar(accuracy) {
  lbl.textContent = txt;
 }
 
-/* ═══════════════════════════════════════════
-   UTILS
-═══════════════════════════════════════════ */
 function getDistance(la1, lo1, la2, lo2) {
  var R  = 6371000;
  var dL = (la2 - la1) * Math.PI / 180;
