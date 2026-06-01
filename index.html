@@ -278,17 +278,18 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 /* ═══════════════════════════════════════════
    CONFIGURATION
 ═══════════════════════════════════════════ */
-const ADMIN_PASSWORD = 'Dadie123.com';
-const MIN_MOVE_METERS = 10;   // distance pour passer bleu → rouge et tracer un nouveau segment
+var ADMIN_PASSWORD = 'Dadie123.com';
+var MIN_MOVE_METERS = 10;
 
 /* ═══════════════════════════════════════════
    ÉTAT GLOBAL
 ═══════════════════════════════════════════ */
-let adminMap, adminPeer;
-let peers = {};            // { peerId: PeerData }
-let selectedId = null;
-let trackerWatchId = null;
-let trackerConn = null;
+var adminMap, adminPeer;
+var peers = {};
+var selectedId = null;
+var trackerWatchId = null;
+var trackerConn = null;
+var myTrackerPeer = null;
 
 /* ═══════════════════════════════════════════
    PASSWORD
@@ -297,7 +298,7 @@ function askPassword() {
   document.getElementById('pwInput').value = '';
   document.getElementById('pwError').textContent = '';
   document.getElementById('pwModal').classList.add('show');
-  setTimeout(() => document.getElementById('pwInput').focus(), 100);
+  setTimeout(function() { document.getElementById('pwInput').focus(); }, 100);
 }
 function closePassword() {
   document.getElementById('pwModal').classList.remove('show');
@@ -341,9 +342,9 @@ function initAdmin() {
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
     { attribution: '© OSM', maxZoom: 19 }).addTo(adminMap);
   L.control.zoom({ position: 'topright' }).addTo(adminMap);
-  adminMap.on('click', () => adminMap.closePopup());
+  adminMap.on('click', function() { adminMap.closePopup(); });
 
-  const code = genCode();
+  var code = genCode();
   document.getElementById('sessionCode').textContent = code;
   document.getElementById('sessionHint').textContent = 'Connexion au serveur…';
   startAdminPeer(code);
@@ -353,12 +354,12 @@ function startAdminPeer(code) {
   adminPeer = new Peer('fg-admin-' + code,
     { host: '0.peerjs.com', port: 443, secure: true, path: '/' });
 
-  adminPeer.on('open', () => {
+  adminPeer.on('open', function() {
     document.getElementById('sessionHint').textContent = 'Partagez ce code avec vos trackers';
   });
-  adminPeer.on('error', (err) => {
+  adminPeer.on('error', function(err) {
     if (err.type === 'unavailable-id') {
-      const c2 = genCode();
+      var c2 = genCode();
       document.getElementById('sessionCode').textContent = c2;
       adminPeer.destroy();
       startAdminPeer(c2);
@@ -370,49 +371,43 @@ function startAdminPeer(code) {
 }
 
 function genCode() {
-  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  let c = '';
-  for (let i = 0; i < 6; i++) c += chars[Math.floor(Math.random() * chars.length)];
+  var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  var c = '';
+  for (var i = 0; i < 6; i++) c += chars[Math.floor(Math.random() * chars.length)];
   return c;
 }
 function copyCode() {
-  const code = document.getElementById('sessionCode').textContent;
-  navigator.clipboard.writeText(code).then(() => {
-    const btn = document.querySelector('.copy-btn');
+  var code = document.getElementById('sessionCode').textContent;
+  navigator.clipboard.writeText(code).then(function() {
+    var btn = document.querySelector('.copy-btn');
     btn.textContent = '✓ Copié';
-    setTimeout(() => btn.textContent = 'Copier', 2000);
-  }).catch(() => alert('Code: ' + code));
+    setTimeout(function() { btn.textContent = 'Copier'; }, 2000);
+  }).catch(function() { alert('Code: ' + code); });
 }
 
 /* ═══════════════════════════════════════════
    ADMIN — GESTION DES PAIRS
 ═══════════════════════════════════════════ */
 function handleNewPeer(conn) {
-  const id = conn.peer;
+  var id = conn.peer;
 
-  conn.on('open', () => {
+  conn.on('open', function() {
     peers[id] = {
-      conn,
+      conn: conn,
       name: 'Tracker…',
-      // position actuelle
       lat: null, lng: null, speed: 0,
-      // position du DERNIER point tracé (pour calculer la distance de déplacement)
       lastTracedLat: null, lastTracedLng: null,
-      // distance totale parcourue
       totalDist: 0,
-      // état
       isMoving: false,
-      // objets Leaflet
       marker: null,
-      trail: [],        // liste de L.polyline (segments colorés)
-      // point de départ du segment en cours
-      segStart: null,
+      trail: [],
+      segStart: null
     };
     renderSidebar();
   });
 
-  conn.on('data', (data) => {
-    const p = peers[id];
+  conn.on('data', function(data) {
+    var p = peers[id];
     if (!p) return;
 
     if (data.type === 'name') {
@@ -422,17 +417,17 @@ function handleNewPeer(conn) {
     }
 
     if (data.type === 'gps') {
-      const { lat, lng, speed } = data;
+      var lat = data.lat;
+      var lng = data.lng;
+      var speed = data.speed;
       p.speed = speed || 0;
 
-      // ── CAS 1 : première position → on place le point bleu ──
       if (p.lat === null) {
         p.lat = lat; p.lng = lng;
         p.lastTracedLat = lat; p.lastTracedLng = lng;
-        p.segStart = { lat, lng };
+        p.segStart = { lat: lat, lng: lng };
         p.isMoving = false;
 
-        // Marqueur bleu pulsant
         p.marker = L.circleMarker([lat, lng], markerStyle(false))
           .addTo(adminMap)
           .bindPopup(popupHtml(p));
@@ -442,42 +437,30 @@ function handleNewPeer(conn) {
         return;
       }
 
-      // ── CAS 2 : positions suivantes ──
-      const distFromLast = getDistance(p.lastTracedLat, p.lastTracedLng, lat, lng);
+      var distFromLast = getDistance(p.lastTracedLat, p.lastTracedLng, lat, lng);
       p.lat = lat; p.lng = lng;
 
-      // A-t-il bougé de plus de MIN_MOVE_METERS depuis le dernier point tracé ?
       if (distFromLast >= MIN_MOVE_METERS) {
-
-        // Tracer un segment de la dernière position tracée → maintenant
-        const segColor = '#ef4444'; // rouge car en mouvement
-        const seg = L.polyline(
+        var seg = L.polyline(
           [[p.lastTracedLat, p.lastTracedLng], [lat, lng]],
-          { color: segColor, weight: 4, opacity: 0.85 }
+          { color: '#ef4444', weight: 4, opacity: 0.85 }
         ).addTo(adminMap);
         p.trail.push(seg);
 
-        // Mettre à jour la distance totale
         p.totalDist += distFromLast;
-
-        // Mémoriser comme dernier point tracé
         p.lastTracedLat = lat;
         p.lastTracedLng = lng;
         p.isMoving = true;
-
       } else {
-        // Pas assez de mouvement → reste bleu
         p.isMoving = false;
       }
 
-      // Déplacer le marqueur et changer sa couleur
       if (p.marker) {
         p.marker.setLatLng([lat, lng]);
         p.marker.setStyle(markerStyle(p.isMoving));
         p.marker.setPopupContent(popupHtml(p));
       }
 
-      // Si ce tracker est sélectionné → recentrer la carte
       if (selectedId === id) {
         adminMap.panTo([lat, lng]);
       }
@@ -486,21 +469,20 @@ function handleNewPeer(conn) {
     }
   });
 
-  conn.on('close', () => removePeer(id));
-  conn.on('error', () => removePeer(id));
+  conn.on('close', function() { removePeer(id); });
+  conn.on('error', function() { removePeer(id); });
 }
 
 function removePeer(id) {
-  const p = peers[id];
+  var p = peers[id];
   if (!p) return;
   if (p.marker && adminMap.hasLayer(p.marker)) adminMap.removeLayer(p.marker);
-  p.trail.forEach(seg => { if (adminMap.hasLayer(seg)) adminMap.removeLayer(seg); });
+  p.trail.forEach(function(seg) { if (adminMap.hasLayer(seg)) adminMap.removeLayer(seg); });
   delete peers[id];
   if (selectedId === id) selectedId = null;
   renderSidebar();
 }
 
-/* styles du marqueur selon état */
 function markerStyle(moving) {
   return moving
     ? { radius: 12, fillColor: '#ef4444', color: '#fff', weight: 2, opacity: 1, fillOpacity: 0.95 }
@@ -508,43 +490,45 @@ function markerStyle(moving) {
 }
 
 function popupHtml(p) {
-  const etat = p.isMoving ? '🔴 EN MOUVEMENT' : '🔵 Arrêté';
-  return `<b style="color:#f0f6ff">${p.name}</b><br>
-    <span style="color:#94a3b8">${etat}</span><br>
-    <span style="color:#94a3b8;font-size:11px">Distance: ${fmtDist(p.totalDist)} · ${(p.speed*3.6).toFixed(1)} km/h</span>`;
+  var etat = p.isMoving ? '🔴 EN MOUVEMENT' : '🔵 Arrete';
+  return '<b style="color:#f0f6ff">' + p.name + '</b><br>' +
+    '<span style="color:#94a3b8">' + etat + '</span><br>' +
+    '<span style="color:#94a3b8;font-size:11px">Distance: ' + fmtDist(p.totalDist) + ' · ' + (p.speed * 3.6).toFixed(1) + ' km/h</span>';
 }
 
 /* ═══════════════════════════════════════════
    ADMIN — SIDEBAR UI
 ═══════════════════════════════════════════ */
 function renderSidebar() {
-  const list = Object.entries(peers);
+  var list = Object.entries(peers);
   document.getElementById('peerCount').textContent = list.length;
   document.getElementById('aClearBtn').disabled = list.length === 0;
   document.getElementById('aLocateBtn').disabled = !selectedId;
 
-  const el = document.getElementById('peerList');
+  var el = document.getElementById('peerList');
   if (!list.length) {
     el.innerHTML = '<div class="empty"><div class="empty-icon">📡</div>En attente de trackers…</div>';
     document.getElementById('adminInfoPanel').style.display = 'none';
     return;
   }
 
-  el.innerHTML = list.map(([id, p]) => `
-    <div class="peer-item ${selectedId === id ? 'active' : ''}" onclick="selectPeer('${id}')">
-      <div class="peer-dot ${p.isMoving ? 'moving' : ''}"></div>
-      <div style="flex:1">
-        <div class="peer-name">${p.name}</div>
-        <div class="peer-sub">${fmtDist(p.totalDist)} · ${p.trail.length} pts</div>
-      </div>
-      <span class="badge ${p.isMoving ? 'moving' : 'idle'}">${p.isMoving ? '🔴' : '🔵'}</span>
-    </div>
-  `).join('');
+  el.innerHTML = list.map(function(entry) {
+    var id = entry[0];
+    var p = entry[1];
+    return '<div class="peer-item ' + (selectedId === id ? 'active' : '') + '" onclick="selectPeer(\'' + id + '\')">' +
+      '<div class="peer-dot ' + (p.isMoving ? 'moving' : '') + '"></div>' +
+      '<div style="flex:1">' +
+        '<div class="peer-name">' + p.name + '</div>' +
+        '<div class="peer-sub">' + fmtDist(p.totalDist) + ' · ' + p.trail.length + ' pts</div>' +
+      '</div>' +
+      '<span class="badge ' + (p.isMoving ? 'moving' : 'idle') + '">' + (p.isMoving ? '🔴' : '🔵') + '</span>' +
+    '</div>';
+  }).join('');
 
   if (selectedId && peers[selectedId]) {
-    const p = peers[selectedId];
+    var p = peers[selectedId];
     document.getElementById('adminInfoPanel').style.display = 'block';
-    document.getElementById('aState').textContent   = p.isMoving ? '🔴 EN MOUVEMENT' : '🔵 ARRÊTÉ';
+    document.getElementById('aState').textContent   = p.isMoving ? '🔴 EN MOUVEMENT' : '🔵 ARRETE';
     document.getElementById('aDist').textContent    = fmtDist(p.totalDist);
     document.getElementById('aSpeed').textContent   = (p.speed * 3.6).toFixed(1) + ' km/h';
     document.getElementById('aLat').textContent     = p.lat != null ? p.lat.toFixed(5) : '--';
@@ -558,23 +542,24 @@ function selectPeer(id) {
   selectedId = id;
   document.getElementById('aLocateBtn').disabled = false;
   renderSidebar();
-  if (peers[id]?.lat != null) adminMap.setView([peers[id].lat, peers[id].lng], 16);
+  if (peers[id] && peers[id].lat != null) adminMap.setView([peers[id].lat, peers[id].lng], 16);
 }
 
 function locateSelected() {
-  const p = peers[selectedId];
+  var p = peers[selectedId];
   if (!p || p.lat == null) return;
   adminMap.setView([p.lat, p.lng], 18);
-  const ring = L.circle([p.lat, p.lng],
+  var ring = L.circle([p.lat, p.lng],
     { color: '#f59e0b', fillColor: '#f59e0b', fillOpacity: .15, radius: 40, weight: 2 })
     .addTo(adminMap);
-  setTimeout(() => { if (adminMap.hasLayer(ring)) adminMap.removeLayer(ring); }, 3000);
+  setTimeout(function() { if (adminMap.hasLayer(ring)) adminMap.removeLayer(ring); }, 3000);
 }
 
 function adminClearAll() {
-  if (!confirm('Effacer toutes les traces de la carte ?')) return;
-  Object.entries(peers).forEach(([id, p]) => {
-    p.trail.forEach(seg => { if (adminMap.hasLayer(seg)) adminMap.removeLayer(seg); });
+  if (!window.confirm('Effacer toutes les traces de la carte ?')) return;
+  Object.entries(peers).forEach(function(entry) {
+    var p = entry[1];
+    p.trail.forEach(function(seg) { if (adminMap.hasLayer(seg)) adminMap.removeLayer(seg); });
     p.trail = [];
     p.totalDist = 0;
     p.lastTracedLat = p.lat;
@@ -590,93 +575,81 @@ function adminClearAll() {
    TRACKER — CONNEXION
 ═══════════════════════════════════════════ */
 function setStatus(icon, text, sub, color) {
-  document.getElementById('statusCard').innerHTML = `
-    <div class="status-icon">${icon}</div>
-    <div class="status-text" style="${color ? 'color:' + color : ''}">${text}</div>
-    <div class="status-sub">${sub || ''}</div>
-  `;
+  document.getElementById('statusCard').innerHTML =
+    '<div class="status-icon">' + icon + '</div>' +
+    '<div class="status-text" style="' + (color ? 'color:' + color : '') + '">' + text + '</div>' +
+    '<div class="status-sub">' + (sub || '') + '</div>';
 }
 
-let myTrackerPeer = null;
-
 function trackerConnect() {
-  const code = document.getElementById('codeInput').value.trim().toUpperCase();
+  var code = document.getElementById('codeInput').value.trim().toUpperCase();
   if (code.length < 4) {
     setStatus('⚠️', 'Code invalide', 'Le code doit faire au moins 4 caractères', '#f59e0b');
     return;
   }
-  const name = document.getElementById('trackerName').value.trim() || 'Tracker';
+  var name = document.getElementById('trackerName').value.trim() || 'Tracker';
 
-  // Nettoyage complet de l'ancienne session
   if (trackerWatchId) { navigator.geolocation.clearWatch(trackerWatchId); trackerWatchId = null; }
-  if (trackerConn)   { try { trackerConn.close(); }   catch(e){} trackerConn = null; }
+  if (trackerConn)   { try { trackerConn.close(); }    catch(e){} trackerConn = null; }
   if (myTrackerPeer) { try { myTrackerPeer.destroy(); } catch(e){} myTrackerPeer = null; }
 
   setStatus('⏳', 'Connexion…', 'Connexion au serveur PeerJS…');
 
-  // Délai pour laisser PeerJS libérer les ressources
-  setTimeout(() => {
+  setTimeout(function() {
     myTrackerPeer = new Peer({ host: '0.peerjs.com', port: 443, secure: true, path: '/' });
 
-    // Timeout si le serveur ne répond pas
-    const openTimeout = setTimeout(() => {
-      setStatus('❌', 'Serveur inaccessible', 'Vérifiez votre connexion internet et réessayez', '#ef4444');
+    var openTimeout = setTimeout(function() {
+      setStatus('❌', 'Serveur inaccessible', 'Verifiez votre connexion internet et reessayez', '#ef4444');
       try { myTrackerPeer.destroy(); } catch(e){}
       myTrackerPeer = null;
     }, 10000);
 
-    myTrackerPeer.on('open', () => {
+    myTrackerPeer.on('open', function() {
       clearTimeout(openTimeout);
-      setStatus('🔗', "Connexion à l'admin…", 'Code: ' + code);
-      const conn = myTrackerPeer.connect('fg-admin-' + code, { reliable: true });
+      setStatus('🔗', 'Connexion a l admin…', 'Code: ' + code);
+      var conn = myTrackerPeer.connect('fg-admin-' + code, { reliable: true });
 
-      // Timeout si l'admin ne répond pas
-      const connTimeout = setTimeout(() => {
-        setStatus('❌', 'Admin introuvable', 'Vérifiez le code « ' + code + ' » et que l'admin est ouvert', '#ef4444');
+      var connTimeout = setTimeout(function() {
+        setStatus('❌', 'Admin introuvable', 'Verifiez le code ' + code + ' et que l admin est ouvert', '#ef4444');
       }, 8000);
 
-      conn.on('open', () => {
+      conn.on('open', function() {
         clearTimeout(connTimeout);
         trackerConn = conn;
         conn.send({ type: 'name', value: name });
         document.getElementById('gpsBox').style.display = 'block';
-        setStatus('✅', 'Connecté ! Acquisition GPS…', 'Patientez quelques secondes…', '#22c55e');
+        setStatus('✅', 'Connecte ! Acquisition GPS…', 'Patientez quelques secondes…', '#22c55e');
         startGPS(conn);
       });
 
-      conn.on('close', () => {
+      conn.on('close', function() {
         clearTimeout(connTimeout);
-        setStatus('❌', 'Déconnecté', 'Appuyez sur Connecter pour relancer', '#ef4444');
+        setStatus('❌', 'Deconnecte', 'Appuyez sur Connecter pour relancer', '#ef4444');
         document.getElementById('gpsBox').style.display = 'none';
         if (trackerWatchId) { navigator.geolocation.clearWatch(trackerWatchId); trackerWatchId = null; }
       });
 
-      conn.on('error', (e) => {
+      conn.on('error', function(e) {
         clearTimeout(connTimeout);
         setStatus('❌', 'Erreur connexion', String(e), '#ef4444');
       });
     });
 
-    myTrackerPeer.on('error', (err) => {
+    myTrackerPeer.on('error', function(err) {
       if (err.type === 'peer-unavailable')
-        setStatus('❌', 'Admin introuvable', 'Vérifiez le code « ' + code + ' » et que l'admin est bien ouvert', '#ef4444');
+        setStatus('❌', 'Admin introuvable', 'Verifiez le code ' + code + ' et que l admin est bien ouvert', '#ef4444');
       else if (err.type === 'network')
-        setStatus('❌', 'Pas de réseau', 'Vérifiez votre connexion internet', '#ef4444');
+        setStatus('❌', 'Pas de reseau', 'Verifiez votre connexion internet', '#ef4444');
       else if (err.type === 'server-error')
-        setStatus('❌', 'Serveur PeerJS indisponible', 'Réessayez dans quelques secondes', '#ef4444');
+        setStatus('❌', 'Serveur PeerJS indisponible', 'Reessayez dans quelques secondes', '#ef4444');
       else
-        setStatus('❌', 'Erreur: ' + err.type, 'Réessayez', '#ef4444');
+        setStatus('❌', 'Erreur: ' + err.type, 'Reessayez', '#ef4444');
     });
   }, 300);
 }
 
 /* ═══════════════════════════════════════════
    TRACKER — GPS
-   Logique :
-   - Première position reçue → envoi immédiat (point bleu sur la carte)
-   - Positions suivantes → envoi seulement si déplacement ≥ MIN_MOVE_METERS
-     (ce qui déclenchera le rouge côté admin)
-   - On accepte jusqu'à 300m de précision pour ne rien bloquer
 ═══════════════════════════════════════════ */
 function startGPS(conn) {
   if (!('geolocation' in navigator)) {
@@ -684,26 +657,27 @@ function startGPS(conn) {
     return;
   }
 
-  const MAX_ACC   = 300;  // rejeter au-delà de 300m
-  const SEND_DIST = 25;   // seuil : 25m de déplacement réel avant de passer rouge
-  const SMOOTH    = 8;    // nb de positions à moyenner pour lisser le bruit GPS
+  var MAX_ACC   = 300;
+  var SEND_DIST = 25;
+  var SMOOTH    = 8;
 
-  let lastSent  = null;   // null = pas encore de première position envoyée
-  let history   = [];     // dernières positions pour le lissage
+  var lastSent  = null;
+  var history   = [];
 
-  // Calcule la position lissée (moyenne des N dernières)
   function smoothed() {
     if (!history.length) return null;
-    const lat = history.reduce((s, p) => s + p.lat, 0) / history.length;
-    const lng = history.reduce((s, p) => s + p.lng, 0) / history.length;
-    return { lat, lng };
+    var lat = history.reduce(function(s, p) { return s + p.lat; }, 0) / history.length;
+    var lng = history.reduce(function(s, p) { return s + p.lng; }, 0) / history.length;
+    return { lat: lat, lng: lng };
   }
 
   trackerWatchId = navigator.geolocation.watchPosition(
-    (pos) => {
-      const { latitude: lat, longitude: lng, accuracy, speed } = pos.coords;
+    function(pos) {
+      var lat      = pos.coords.latitude;
+      var lng      = pos.coords.longitude;
+      var accuracy = pos.coords.accuracy;
+      var speed    = pos.coords.speed;
 
-      // Afficher valeurs brutes
       document.getElementById('tLat').textContent = lat.toFixed(5);
       document.getElementById('tLon').textContent = lng.toFixed(5);
       document.getElementById('tAcc').textContent = Math.round(accuracy) + ' m';
@@ -711,46 +685,42 @@ function startGPS(conn) {
         speed != null ? (speed * 3.6).toFixed(1) + ' km/h' : '0 km/h';
       updateAccBar(accuracy);
 
-      // GPS trop imprécis → on affiche mais on n'envoie pas
       if (accuracy > MAX_ACC) {
-        setStatus('🔍', 'Signal GPS faible', `Précision ${Math.round(accuracy)} m — allez à l'extérieur`, '#f59e0b');
+        setStatus('🔍', 'Signal GPS faible', 'Precision ' + Math.round(accuracy) + ' m — allez a l exterieur', '#f59e0b');
         return;
       }
 
-      // Ajouter au buffer de lissage (garder les SMOOTH dernières)
-      history.push({ lat, lng });
+      history.push({ lat: lat, lng: lng });
       if (history.length > SMOOTH) history.shift();
 
-      const avg = smoothed();
+      var avg = smoothed();
 
-      // ── PREMIÈRE POSITION : envoi immédiat → point bleu ──
       if (!lastSent) {
         lastSent = avg;
         send(conn, avg.lat, avg.lng, speed);
-        setStatus('✅', 'Point affiché sur la carte', `Précision ${Math.round(accuracy)} m`, '#22c55e');
+        setStatus('✅', 'Point affiche sur la carte', 'Precision ' + Math.round(accuracy) + ' m', '#22c55e');
         return;
       }
 
-      // ── POSITIONS SUIVANTES : comparer la position lissée au dernier envoi ──
-      const d = getDistance(lastSent.lat, lastSent.lng, avg.lat, avg.lng);
+      var d = getDistance(lastSent.lat, lastSent.lng, avg.lat, avg.lng);
 
       if (d >= SEND_DIST) {
         lastSent = avg;
         send(conn, avg.lat, avg.lng, speed);
-        setStatus('✅', `Déplacé de ${Math.round(d)} m`, `Précision ${Math.round(accuracy)} m`, '#22c55e');
+        setStatus('✅', 'Deplace de ' + Math.round(d) + ' m', 'Precision ' + Math.round(accuracy) + ' m', '#22c55e');
       } else {
-        setStatus('✅', 'En position', `Précision ${Math.round(accuracy)} m · immobile (${Math.round(d)} m de dérive)`, '#22c55e');
+        setStatus('✅', 'En position', 'Precision ' + Math.round(accuracy) + ' m · immobile (' + Math.round(d) + ' m de derive)', '#22c55e');
       }
     },
-    (err) => {
-      let msg = '', hint = '';
+    function(err) {
+      var msg = '', hint = '';
       switch (err.code) {
-        case 1: msg = 'Permission GPS refusée'; hint = 'Autorisez la localisation dans les paramètres'; break;
-        case 2: msg = 'GPS indisponible'; hint = 'Activez le GPS et allez à l\'extérieur'; break;
+        case 1: msg = 'Permission GPS refusee'; hint = 'Autorisez la localisation dans les parametres'; break;
+        case 2: msg = 'GPS indisponible'; hint = 'Activez le GPS et allez a l exterieur'; break;
         case 3:
-          msg = 'Délai GPS dépassé';
+          msg = 'Delai GPS depasse';
           hint = 'Nouvelle tentative…';
-          setTimeout(() => {
+          setTimeout(function() {
             if (trackerConn && trackerConn.open) {
               if (trackerWatchId) { navigator.geolocation.clearWatch(trackerWatchId); trackerWatchId = null; }
               startGPS(conn);
@@ -765,19 +735,19 @@ function startGPS(conn) {
 }
 
 function send(conn, lat, lng, speed) {
-  if (conn && conn.open) conn.send({ type: 'gps', lat, lng, speed: speed || 0 });
+  if (conn && conn.open) conn.send({ type: 'gps', lat: lat, lng: lng, speed: speed || 0 });
 }
 
 function updateAccBar(accuracy) {
-  const fill = document.getElementById('accFill');
-  const lbl  = document.getElementById('accLbl');
+  var fill = document.getElementById('accFill');
+  var lbl  = document.getElementById('accLbl');
   if (!fill) return;
-  let pct, cls, txt;
-  if      (accuracy <= 10)  { pct = 100; cls = '';     txt = `✅ Excellent (${Math.round(accuracy)} m)`; }
-  else if (accuracy <= 30)  { pct = 75;  cls = '';     txt = `🟢 Bon (${Math.round(accuracy)} m)`; }
-  else if (accuracy <= 80)  { pct = 45;  cls = 'warn'; txt = `🟡 Moyen (${Math.round(accuracy)} m)`; }
-  else if (accuracy <= 200) { pct = 25;  cls = 'warn'; txt = `🟠 Faible (${Math.round(accuracy)} m)`; }
-  else                      { pct = 10;  cls = 'bad';  txt = `🔴 Très faible (${Math.round(accuracy)} m)`; }
+  var pct, cls, txt;
+  if      (accuracy <= 10)  { pct = 100; cls = '';     txt = '✅ Excellent (' + Math.round(accuracy) + ' m)'; }
+  else if (accuracy <= 30)  { pct = 75;  cls = '';     txt = '🟢 Bon (' + Math.round(accuracy) + ' m)'; }
+  else if (accuracy <= 80)  { pct = 45;  cls = 'warn'; txt = '🟡 Moyen (' + Math.round(accuracy) + ' m)'; }
+  else if (accuracy <= 200) { pct = 25;  cls = 'warn'; txt = '🟠 Faible (' + Math.round(accuracy) + ' m)'; }
+  else                      { pct = 10;  cls = 'bad';  txt = '🔴 Tres faible (' + Math.round(accuracy) + ' m)'; }
   fill.style.width = pct + '%';
   fill.className = 'acc-fill ' + cls;
   lbl.textContent = txt;
@@ -787,22 +757,23 @@ function updateAccBar(accuracy) {
    UTILS
 ═══════════════════════════════════════════ */
 function getDistance(la1, lo1, la2, lo2) {
-  const R = 6371000;
-  const dL = (la2 - la1) * Math.PI / 180;
-  const dO = (lo2 - lo1) * Math.PI / 180;
-  const a = Math.sin(dL/2)**2 +
-    Math.cos(la1*Math.PI/180) * Math.cos(la2*Math.PI/180) * Math.sin(dO/2)**2;
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  var R  = 6371000;
+  var dL = (la2 - la1) * Math.PI / 180;
+  var dO = (lo2 - lo1) * Math.PI / 180;
+  var a  = Math.sin(dL/2) * Math.sin(dL/2) +
+    Math.cos(la1 * Math.PI / 180) * Math.cos(la2 * Math.PI / 180) *
+    Math.sin(dO/2) * Math.sin(dO/2);
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 function fmtDist(d) {
-  return d >= 1000 ? (d/1000).toFixed(2) + ' km' : Math.round(d) + ' m';
+  return d >= 1000 ? (d / 1000).toFixed(2) + ' km' : Math.round(d) + ' m';
 }
 
-window.addEventListener('resize', () => {
-  if (adminMap) setTimeout(() => adminMap.invalidateSize(), 100);
+window.addEventListener('resize', function() {
+  if (adminMap) setTimeout(function() { adminMap.invalidateSize(); }, 100);
 });
-window.addEventListener('orientationchange', () => {
-  if (adminMap) setTimeout(() => adminMap.invalidateSize(), 200);
+window.addEventListener('orientationchange', function() {
+  if (adminMap) setTimeout(function() { adminMap.invalidateSize(); }, 200);
 });
 </script>
 </body>
