@@ -22,7 +22,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 #splash{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px;padding:24px;}
 .splash-logo{font-size:56px;animation:float 3s ease-in-out infinite;}
 @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
-.splash-title{font-size:32px;font-weight:800;color:var(--text);text-align:center;}
+.splash-title{font-size:32px;font-weight:800;text-align:center;}
 .splash-title span{color:var(--blue-light);}
 .splash-sub{font-size:14px;color:var(--muted);text-align:center;max-width:300px;line-height:1.6;}
 .mode-cards{display:flex;flex-direction:column;gap:12px;width:100%;max-width:340px;}
@@ -43,7 +43,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 .pw-error{font-size:12px;color:var(--red);margin-bottom:10px;min-height:18px;}
 .pw-btn{width:100%;padding:12px;background:var(--blue);border:none;color:#fff;border-radius:9px;font-family:'Outfit',sans-serif;font-weight:700;font-size:14px;cursor:pointer;margin-bottom:8px;}
 .pw-cancel{width:100%;padding:10px;background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:9px;font-family:'Outfit',sans-serif;font-size:13px;cursor:pointer;}
-.pw-cancel:hover{border-color:var(--red);color:var(--red);}
 
 #adminView{display:none;width:100%;height:100vh;}
 .admin-grid{display:grid;grid-template-columns:1fr 380px;height:100vh;}
@@ -53,681 +52,466 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 .sidebar-header h1{font-size:22px;font-weight:800;color:var(--blue-light);margin-bottom:2px;}
 .sidebar-header p{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
 .sidebar-body{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:14px;}
-.sidebar-body::-webkit-scrollbar{width:4px;}
-.sidebar-body::-webkit-scrollbar-thumb{background:var(--blue);border-radius:4px;}
 .section-label{font-size:11px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
 .session-box{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:14px;}
 .session-row{display:flex;align-items:center;gap:10px;}
 .session-code{flex:1;font-size:22px;font-weight:800;letter-spacing:4px;color:var(--blue-light);font-family:monospace;}
-.copy-btn{padding:6px 12px;border:1px solid var(--border);background:var(--surface3);color:var(--muted);border-radius:7px;cursor:pointer;font-size:12px;font-weight:600;transition:all .2s;white-space:nowrap;}
+.copy-btn{padding:6px 12px;border:1px solid var(--border);background:var(--surface3);color:var(--muted);border-radius:7px;cursor:pointer;font-size:12px;font-weight:600;}
 .copy-btn:hover{border-color:var(--blue);color:var(--blue);}
 .session-hint{font-size:11px;color:var(--muted);margin-top:8px;line-height:1.5;}
-.peer-list{display:flex;flex-direction:column;gap:6px;max-height:160px;overflow-y:auto;}
-.peer-item{padding:9px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:10px;}
+.peer-list{display:flex;flex-direction:column;gap:6px;max-height:200px;overflow-y:auto;}
+.peer-item{padding:9px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:10px;}
 .peer-item:hover{border-color:var(--blue);background:var(--blue-dim);}
 .peer-item.active{background:var(--blue);border-color:var(--blue);}
-.peer-dot{width:9px;height:9px;border-radius:50%;background:var(--blue-light);flex-shrink:0;animation:pdot-blue 2s infinite;}
-@keyframes pdot-blue{0%,100%{box-shadow:0 0 0 0 rgba(59,130,246,.6);}50%{box-shadow:0 0 0 5px rgba(59,130,246,0);}}
-.peer-dot.moving{background:var(--red);animation:pdot-red 1s infinite;}
-@keyframes pdot-red{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.7);}50%{box-shadow:0 0 0 6px rgba(239,68,68,0);}}
+.peer-dot{width:9px;height:9px;border-radius:50%;background:var(--blue-light);flex-shrink:0;animation:pdot 2s infinite;}
+@keyframes pdot{0%,100%{box-shadow:0 0 0 0 rgba(59,130,246,.6);}50%{box-shadow:0 0 0 5px rgba(59,130,246,0);}}
+.peer-dot.moving{background:var(--red);}
 .peer-name{font-weight:700;font-size:13px;flex:1;}
 .peer-sub{font-size:11px;color:var(--muted);}
-.peer-item.active .peer-sub{color:rgba(255,255,255,.7);}
-.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;}
-.badge.moving{background:var(--red-dim);color:var(--red);}
-.badge.idle{background:var(--blue-dim);color:var(--blue-light);}
+.peer-item.active .peer-sub{color:rgba(255,255,255,.8);}
 .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
 .info-card{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 11px;}
 .info-card.full{grid-column:1/-1;}
-.info-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;}
+.info-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;margin-bottom:3px;}
 .info-val{font-size:14px;font-weight:700;color:var(--yellow);}
 .btn-row{display:flex;gap:8px;flex-shrink:0;padding:12px 14px;border-top:1px solid var(--border);}
-.btn{flex:1;padding:10px 8px;border:1.5px solid var(--border);background:transparent;color:var(--text);font-weight:700;cursor:pointer;border-radius:9px;font-family:'Outfit',sans-serif;font-size:12px;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:5px;}
-.btn:active:not(:disabled){transform:scale(.96);}
+.btn{flex:1;padding:10px 8px;border:1.5px solid var(--border);background:transparent;color:var(--text);font-weight:700;cursor:pointer;border-radius:9px;font-family:'Outfit',sans-serif;font-size:12px;}
 .btn.locate{border-color:var(--yellow);color:var(--yellow);}
 .btn.danger{border-color:var(--red);color:var(--red);}
 .btn:disabled{opacity:.3;cursor:not-allowed;}
 .empty{text-align:center;padding:16px;color:var(--muted);font-size:12px;}
-.empty-icon{font-size:24px;margin-bottom:6px;}
 
-#trackerView{display:none;flex-direction:column;align-items:center;justify-content:flex-start;height:100dvh;padding:20px 16px;gap:14px;overflow-y:auto;background:var(--bg);}
+#trackerView{display:none;flex-direction:column;align-items:center;height:100dvh;padding:20px 16px;gap:14px;overflow-y:auto;}
 .tracker-header{text-align:center;padding-top:16px;}
 .t-logo{font-size:40px;margin-bottom:8px;}
 .tracker-header h2{font-size:24px;font-weight:800;}
 .tracker-header p{font-size:13px;color:var(--muted);margin-top:4px;}
 .card{width:100%;max-width:360px;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;}
-.card h3{font-size:13px;font-weight:700;color:var(--blue-light);margin-bottom:12px;text-transform:uppercase;letter-spacing:.5px;}
+.card h3{font-size:13px;font-weight:700;color:var(--blue-light);margin-bottom:12px;text-transform:uppercase;}
 .input-row{display:flex;gap:8px;}
-.code-input{flex:1;padding:12px 14px;background:var(--surface2);border:1.5px solid var(--border);color:var(--text);border-radius:9px;font-family:'Outfit',sans-serif;font-weight:700;font-size:20px;letter-spacing:4px;text-transform:uppercase;text-align:center;outline:none;}
+.code-input{flex:1;padding:12px 14px;background:var(--surface2);border:1.5px solid var(--border);color:var(--text);border-radius:9px;font-family:'Outfit',sans-serif;font-weight:700;font-size:18px;letter-spacing:3px;text-transform:uppercase;text-align:center;outline:none;}
 .code-input:focus{border-color:var(--blue);}
-.code-input::placeholder{font-size:13px;letter-spacing:1px;font-weight:400;color:var(--muted);}
-.connect-btn{padding:12px 16px;background:var(--blue);border:none;color:#fff;border-radius:9px;font-family:'Outfit',sans-serif;font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap;}
-.connect-btn:active{opacity:.85;}
+.connect-btn{padding:12px 16px;background:var(--blue);border:none;color:#fff;border-radius:9px;font-family:'Outfit',sans-serif;font-weight:700;font-size:13px;cursor:pointer;}
 .name-input{width:100%;padding:10px 12px;background:var(--surface2);border:1.5px solid var(--border);color:var(--text);border-radius:8px;font-family:'Outfit',sans-serif;font-size:14px;outline:none;margin-top:8px;}
-.name-input:focus{border-color:var(--blue);}
 .status-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;text-align:center;width:100%;max-width:360px;}
 .status-icon{font-size:34px;margin-bottom:8px;}
 .status-text{font-size:16px;font-weight:700;margin-bottom:4px;}
 .status-sub{font-size:12px;color:var(--muted);line-height:1.5;}
 .gps-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;}
 .gps-card{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;}
-.gps-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;}
+.gps-lbl{font-size:10px;color:var(--muted);margin-bottom:3px;}
 .gps-val{font-size:13px;font-weight:700;color:var(--yellow);}
-.acc-bar-wrap{margin-top:10px;}
-.acc-bar-lbl{font-size:11px;color:var(--muted);margin-bottom:4px;}
-.acc-bar{width:100%;height:6px;background:var(--surface3);border-radius:3px;overflow:hidden;}
-.acc-fill{height:100%;width:0;border-radius:3px;transition:width .5s,background .5s;background:var(--green);}
-.acc-fill.warn{background:var(--yellow);}
-.acc-fill.bad{background:var(--red);}
 .back-btn{padding:10px 20px;background:var(--surface);border:1px solid var(--border);color:var(--muted);border-radius:9px;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif;}
 
-.leaflet-popup-content-wrapper{background:var(--surface)!important;color:var(--text)!important;border:1px solid var(--border)!important;border-radius:8px!important;box-shadow:0 8px 32px rgba(0,0,0,.6)!important;}
+.leaflet-popup-content-wrapper{background:var(--surface)!important;color:var(--text)!important;border:1px solid var(--border)!important;border-radius:8px!important;}
 .leaflet-popup-tip{background:var(--surface)!important;}
-.leaflet-popup-content{font-family:'Outfit',sans-serif!important;font-size:13px!important;margin:10px!important;}
+.leaflet-popup-content{font-family:'Outfit',sans-serif!important;font-size:13px!important;}
 
 @media(max-width:900px){
  .admin-grid{grid-template-columns:1fr;grid-template-rows:55vh 1fr;}
  .sidebar{border-left:none;border-top:1px solid var(--border);height:auto;max-height:45vh;}
- .sidebar-header h1{font-size:18px;}
- .sidebar-body{padding:10px;}
 }
 </style>
 </head>
 <body>
 
+<!-- SPLASH / CHOIX -->
 <div id="splash">
- <div class="splash-logo">🌲</div>
- <div>
-   <div class="splash-title">Forest<span>Guard</span></div>
-   <div class="splash-sub">Choisissez votre rôle pour commencer</div>
- </div>
- <div class="mode-cards">
-   <div class="mode-card" onclick="askPassword()">
-     <div class="mode-icon">🖥️</div>
-     <div>
-       <div class="mode-name">PC Admin</div>
-       <div class="mode-desc">Voir la carte et toutes les positions en temps réel. Accès protégé.</div>
-     </div>
-   </div>
-   <div class="mode-card" onclick="enterMode('tracker')">
-     <div class="mode-icon">📱</div>
-     <div>
-       <div class="mode-name">Tracker (Téléphone)</div>
-       <div class="mode-desc">Envoyer votre position GPS à l'admin via un code de session.</div>
-     </div>
-   </div>
- </div>
+  <div class="splash-logo">🌲</div>
+  <div>
+    <div class="splash-title">Forest<span>Guard</span></div>
+    <div class="splash-sub">Choisissez votre rôle pour commencer</div>
+  </div>
+  <div class="mode-cards">
+    <div class="mode-card" onclick="chooseAdmin()">
+      <div class="mode-icon">🖥️</div>
+      <div>
+        <div class="mode-name">PC Admin</div>
+        <div class="mode-desc">Voir la carte et toutes les positions en temps réel. Accès protégé.</div>
+      </div>
+    </div>
+    <div class="mode-card" onclick="chooseTracker()">
+      <div class="mode-icon">📱</div>
+      <div>
+        <div class="mode-name">Tracker (Téléphone)</div>
+        <div class="mode-desc">Envoyer votre position GPS à l'admin via un code de session.</div>
+      </div>
+    </div>
+  </div>
 </div>
 
+<!-- MOT DE PASSE ADMIN -->
 <div id="pwModal">
- <div class="pw-box">
-   <div class="pw-icon">🔒</div>
-   <h3>Accès Admin</h3>
-   <p>Entrez le mot de passe pour accéder à la console</p>
-   <input class="pw-input" type="password" id="pwInput" placeholder="Mot de passe"
-     onkeydown="if(event.key==='Enter')checkPassword()">
-   <div class="pw-error" id="pwError"></div>
-   <button class="pw-btn" onclick="checkPassword()">Entrer</button>
-   <button class="pw-cancel" onclick="closePassword()">Annuler</button>
- </div>
+  <div class="pw-box">
+    <div class="pw-icon">🔒</div>
+    <h3>Accès Admin</h3>
+    <p>Entrez le mot de passe</p>
+    <input id="pwInput" class="pw-input" type="password" placeholder="••••••">
+    <div id="pwError" class="pw-error"></div>
+    <button class="pw-btn" onclick="checkPassword()">Entrer</button>
+    <button class="pw-cancel" onclick="closePw()">Annuler</button>
+  </div>
 </div>
 
+<!-- ADMIN -->
 <div id="adminView">
- <div class="admin-grid">
-   <div id="adminMap"></div>
-   <div class="sidebar">
-     <div class="sidebar-header">
-       <h1>🌲 Forest Guard</h1>
-       <p>Console Admin</p>
-     </div>
-     <div class="sidebar-body">
-       <div>
-         <div class="section-label">📡 Code de session</div>
-         <div class="session-box">
-           <div class="session-row">
-             <div class="session-code" id="sessionCode">----</div>
-             <button class="copy-btn" onclick="copyCode()">Copier</button>
-           </div>
-           <div class="session-hint" id="sessionHint">Génération en cours…</div>
-         </div>
-       </div>
-       <div>
-         <div class="section-label">📱 Trackers connectés (<span id="peerCount">0</span>)</div>
-         <div class="peer-list" id="peerList">
-           <div class="empty"><div class="empty-icon">📡</div>En attente de trackers…</div>
-         </div>
-       </div>
-       <div id="adminInfoPanel" style="display:none;">
-         <div class="section-label">📍 Position sélectionnée</div>
-         <div class="info-grid">
-           <div class="info-card full"><div class="info-lbl">État</div><div class="info-val" id="aState">--</div></div>
-           <div class="info-card"><div class="info-lbl">Distance parcourue</div><div class="info-val" id="aDist">0 m</div></div>
-           <div class="info-card"><div class="info-lbl">Vitesse</div><div class="info-val" id="aSpeed">0 km/h</div></div>
-           <div class="info-card"><div class="info-lbl">Latitude</div><div class="info-val" id="aLat">--</div></div>
-           <div class="info-card"><div class="info-lbl">Longitude</div><div class="info-val" id="aLon">--</div></div>
-         </div>
-       </div>
-     </div>
-     <div class="btn-row">
-       <button class="btn locate" id="aLocateBtn" onclick="locateSelected()" disabled>📍 Localiser</button>
-       <button class="btn danger" id="aClearBtn" onclick="adminClearAll()" disabled>🗑 Effacer</button>
-     </div>
-   </div>
- </div>
+  <div class="admin-grid">
+    <div id="adminMap"></div>
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <h1>🌲 Forest Guard</h1>
+        <p>Console Admin</p>
+      </div>
+      <div class="sidebar-body">
+        <div>
+          <div class="section-label">📡 Code de session</div>
+          <div class="session-box">
+            <div class="session-row">
+              <div id="sessionCode" class="session-code">----</div>
+              <button class="copy-btn" onclick="copyCode()">Copier</button>
+            </div>
+            <div id="sessionHint" class="session-hint">Génération en cours…</div>
+          </div>
+        </div>
+        <div>
+          <div class="section-label" id="peerCount">📱 Trackers connectés (0)</div>
+          <div id="peerList" class="peer-list">
+            <div class="empty">📡 En attente de trackers…</div>
+          </div>
+        </div>
+        <div>
+          <div class="section-label">📍 Position sélectionnée</div>
+          <div class="info-grid">
+            <div class="info-card full"><div class="info-lbl">État</div><div id="iState" class="info-val">--</div></div>
+            <div class="info-card"><div class="info-lbl">Vitesse</div><div id="iSpeed" class="info-val">0 km/h</div></div>
+            <div class="info-card"><div class="info-lbl">Précision</div><div id="iAcc" class="info-val">--</div></div>
+            <div class="info-card"><div class="info-lbl">Latitude</div><div id="iLat" class="info-val">--</div></div>
+            <div class="info-card"><div class="info-lbl">Longitude</div><div id="iLng" class="info-val">--</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn locate" onclick="locateSelected()">📍 Localiser</button>
+        <button class="btn danger" onclick="clearAll()">🗑 Effacer</button>
+      </div>
+    </div>
+  </div>
 </div>
 
+<!-- TRACKER -->
 <div id="trackerView">
- <div class="tracker-header">
-   <div class="t-logo">📱</div>
-   <h2>Mode Tracker</h2>
-   <p>Envoi de position vers l'admin</p>
- </div>
- <div class="card">
-   <h3>Votre nom / ID</h3>
-   <input class="name-input" id="trackerName" placeholder="ex: Bois A, Camion 1…" maxlength="30">
- </div>
- <div class="card">
-   <h3>Code de session Admin</h3>
-   <div class="input-row">
-     <input class="code-input" id="codeInput" maxlength="6" placeholder="CODE"
-       oninput="this.value=this.value.toUpperCase()">
-     <button class="connect-btn" onclick="trackerConnect()">Connecter</button>
-   </div>
- </div>
- <div class="status-card" id="statusCard">
-   <div class="status-icon">⏳</div>
-   <div class="status-text">En attente</div>
-   <div class="status-sub">Entrez le code admin et appuyez sur Connecter</div>
- </div>
- <div class="card" id="gpsBox" style="display:none;">
-   <h3>📡 Ma position GPS</h3>
-   <div class="gps-grid">
-     <div class="gps-card"><div class="gps-lbl">Latitude</div><div class="gps-val" id="tLat">--</div></div>
-     <div class="gps-card"><div class="gps-lbl">Longitude</div><div class="gps-val" id="tLon">--</div></div>
-     <div class="gps-card"><div class="gps-lbl">Précision</div><div class="gps-val" id="tAcc">--</div></div>
-     <div class="gps-card"><div class="gps-lbl">Vitesse</div><div class="gps-val" id="tSpd">--</div></div>
-   </div>
-   <div class="acc-bar-wrap">
-     <div class="acc-bar-lbl" id="accLbl">Signal GPS…</div>
-     <div class="acc-bar"><div class="acc-fill" id="accFill"></div></div>
-   </div>
- </div>
- <button class="back-btn" onclick="backToSplash()">← Revenir au choix</button>
- <div style="height:24px;"></div>
+  <div class="tracker-header">
+    <div class="t-logo">📱</div>
+    <h2>Mode Tracker</h2>
+    <p>Envoi de position vers l'admin</p>
+  </div>
+  <div class="card">
+    <h3>Votre nom / ID</h3>
+    <input id="trackerName" class="name-input" placeholder="Ex: Agent 1" maxlength="20">
+  </div>
+  <div class="card">
+    <h3>Code de session Admin</h3>
+    <div class="input-row">
+      <input id="codeInput" class="code-input" placeholder="CODE" maxlength="6">
+      <button class="connect-btn" onclick="connectTracker()">Connecter</button>
+    </div>
+  </div>
+  <div class="status-card">
+    <div id="tIcon" class="status-icon">⏳</div>
+    <div id="tStatus" class="status-text">En attente</div>
+    <div id="tSub" class="status-sub">Entrez le code admin et appuyez sur Connecter</div>
+    <div class="gps-grid">
+      <div class="gps-card"><div class="gps-lbl">Latitude</div><div id="tLat" class="gps-val">--</div></div>
+      <div class="gps-card"><div class="gps-lbl">Longitude</div><div id="tLng" class="gps-val">--</div></div>
+      <div class="gps-card"><div class="gps-lbl">Précision</div><div id="tAcc" class="gps-val">--</div></div>
+      <div class="gps-card"><div class="gps-lbl">Vitesse</div><div id="tSpeed" class="gps-val">--</div></div>
+    </div>
+  </div>
+  <button class="back-btn" onclick="location.reload()">← Revenir au choix</button>
 </div>
 
 <script>
-var ADMIN_PASSWORD = 'Dadie123.com';
-var MIN_MOVE_METERS = 25;  // <-- TU PEUX AUGMENTER CE CHIFFRE (ex: 50, 100, etc.)
+/* ============================================================
+   CONFIG
+   ============================================================ */
+const ADMIN_PASSWORD = "1234"; // CHANGE-LE
+const PEER_PREFIX = "forestguard-"; // doit être identique des 2 côtés
 
-var adminMap, adminPeer;
-var peers = {};
-var selectedId = null;
-var trackerWatchId = null;
-var trackerConn = null;
-var myTrackerPeer = null;
-
-function askPassword() {
- document.getElementById('pwInput').value = '';
- document.getElementById('pwError').textContent = '';
- document.getElementById('pwModal').classList.add('show');
- setTimeout(function() { document.getElementById('pwInput').focus(); }, 100);
+/* ============================================================
+   NAVIGATION ÉCRANS
+   ============================================================ */
+function chooseAdmin(){
+  document.getElementById('pwModal').classList.add('show');
+  setTimeout(()=>document.getElementById('pwInput').focus(),100);
 }
-function closePassword() {
- document.getElementById('pwModal').classList.remove('show');
+function closePw(){ document.getElementById('pwModal').classList.remove('show'); }
+function checkPassword(){
+  const v = document.getElementById('pwInput').value;
+  if(v === ADMIN_PASSWORD){
+    closePw();
+    document.getElementById('splash').style.display='none';
+    document.getElementById('adminView').style.display='block';
+    startAdmin();
+  } else {
+    document.getElementById('pwError').textContent = "Mot de passe incorrect";
+  }
 }
-function checkPassword() {
- if (document.getElementById('pwInput').value === ADMIN_PASSWORD) {
-   closePassword();
-   enterMode('admin');
- } else {
-   document.getElementById('pwError').textContent = '❌ Mot de passe incorrect';
-   document.getElementById('pwInput').value = '';
-   document.getElementById('pwInput').focus();
- }
-}
-
-function enterMode(mode) {
- document.getElementById('splash').style.display = 'none';
- if (mode === 'admin') {
-   document.getElementById('adminView').style.display = 'block';
-   initAdmin();
- } else {
-   document.getElementById('trackerView').style.display = 'flex';
- }
-}
-function backToSplash() {
- if (trackerWatchId) { navigator.geolocation.clearWatch(trackerWatchId); trackerWatchId = null; }
- if (trackerConn) { try { trackerConn.close(); } catch(e){} trackerConn = null; }
- document.getElementById('trackerView').style.display = 'none';
- document.getElementById('gpsBox').style.display = 'none';
- document.getElementById('splash').style.display = 'flex';
-}
-
-function initAdmin() {
- adminMap = L.map('adminMap', { zoomControl: false }).setView([6.8276, -5.2893], 13);
- L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-   { attribution: '© OSM', maxZoom: 19 }).addTo(adminMap);
- L.control.zoom({ position: 'topright' }).addTo(adminMap);
- adminMap.on('click', function() { adminMap.closePopup(); });
-
- var code = genCode();
- document.getElementById('sessionCode').textContent = code;
- document.getElementById('sessionHint').textContent = 'Connexion au serveur…';
- startAdminPeer(code);
-}
-
-function startAdminPeer(code) {
- adminPeer = new Peer('fg-admin-' + code,
-   { host: '0.peerjs.com', port: 443, secure: true, path: '/' });
-
- adminPeer.on('open', function() {
-   document.getElementById('sessionHint').textContent = 'Partagez ce code avec vos trackers';
- });
- adminPeer.on('error', function(err) {
-   if (err.type === 'unavailable-id') {
-     var c2 = genCode();
-     document.getElementById('sessionCode').textContent = c2;
-     adminPeer.destroy();
-     startAdminPeer(c2);
-   } else {
-     document.getElementById('sessionHint').textContent = '⚠️ Erreur: ' + err.type;
-   }
- });
- adminPeer.on('connection', handleNewPeer);
-}
-
-function genCode() {
- var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
- var c = '';
- for (var i = 0; i < 6; i++) c += chars[Math.floor(Math.random() * chars.length)];
- return c;
-}
-function copyCode() {
- var code = document.getElementById('sessionCode').textContent;
- navigator.clipboard.writeText(code).then(function() {
-   var btn = document.querySelector('.copy-btn');
-   btn.textContent = '✓ Copié';
-   setTimeout(function() { btn.textContent = 'Copier'; }, 2000);
- }).catch(function() { alert('Code: ' + code); });
-}
-
-/* CORRIGÉ: Suivi en temps réel fonctionnel */
-function handleNewPeer(conn) {
- var peerId = conn.peer;
-
- conn.on('open', function() {
-   peers[peerId] = {
-     conn: conn,
-     name: 'Tracker…',
-     lat: null, lng: null, speed: 0,
-     lastLat: null, lastLng: null,  // <-- Dernière position REÇUE (pas seulement tracée)
-     totalDist: 0,
-     isMoving: false,
-     marker: null,
-     trail: []
-   };
-   renderSidebar();
- });
-
- conn.on('data', function(data) {
-   var p = peers[peerId];
-   if (!p) return;
-
-   if (data.type === 'name') {
-     p.name = data.value || 'Tracker';
-     renderSidebar();
-     return;
-   }
-
-   if (data.type === 'gps') {
-     var lat = data.lat;
-     var lng = data.lng;
-     var speed = data.speed || 0;
-     p.speed = speed;
-
-     // PREMIÈRE POSITION
-     if (p.lat === null) {
-       p.lat = lat; p.lng = lng;
-       p.lastLat = lat; p.lastLng = lng;
-       p.isMoving = false;
-
-       p.marker = L.circleMarker([lat, lng], markerStyle(false))
-         .addTo(adminMap)
-         .bindPopup(popupHtml(p));
-
-       adminMap.setView([lat, lng], 15);
-       renderSidebar();
-       return;
-     }
-
-     // POSITION SUIVANTE : calculer distance depuis DERNIÈRE position REÇUE
-     var dist = getDistance(p.lastLat, p.lastLng, lat, lng);
-     p.lastLat = lat; p.lastLng = lng;  // <-- Mettre à jour TOUTES les positions reçues
-
-     // Si déplacement >= MIN_MOVE_METERS → rouge + tracer ligne
-     if (dist >= MIN_MOVE_METERS) {
-       var seg = L.polyline(
-         [[p.lat, p.lng], [lat, lng]],
-         { color: '#ef4444', weight: 4, opacity: 0.85 }
-       ).addTo(adminMap);
-       p.trail.push(seg);
-       p.totalDist += dist;
-       p.isMoving = true;
-     } else {
-       p.isMoving = false;
-     }
-
-     // Mettre à jour la position courante
-     p.lat = lat; p.lng = lng;
-
-     // Mise à jour du marqueur
-     if (p.marker) {
-       p.marker.setLatLng([lat, lng]);
-       p.marker.setStyle(markerStyle(p.isMoving));
-       p.marker.setPopupContent(popupHtml(p));
-     }
-
-     if (selectedId === peerId) {
-       adminMap.panTo([lat, lng]);
-     }
-
-     renderSidebar();
-   }
- });
-
- conn.on('close', function() { removePeer(peerId); });
- conn.on('error', function() { removePeer(peerId); });
-}
-
-function removePeer(peerId) {
- var p = peers[peerId];
- if (!p) return;
- if (p.marker && adminMap.hasLayer(p.marker)) adminMap.removeLayer(p.marker);
- p.trail.forEach(function(seg) { if (adminMap.hasLayer(seg)) adminMap.removeLayer(seg); });
- delete peers[peerId];
- if (selectedId === peerId) selectedId = null;
- renderSidebar();
-}
-
-function markerStyle(moving) {
- return moving
-   ? { radius: 12, fillColor: '#ef4444', color: '#fff', weight: 2, opacity: 1, fillOpacity: 0.95 }
-   : { radius: 12, fillColor: '#2563eb', color: '#fff', weight: 2, opacity: 1, fillOpacity: 0.95 };
-}
-
-function popupHtml(p) {
- var etat = p.isMoving ? '🔴 EN MOUVEMENT' : '🔵 Arrêté';
- return '<b style="color:#f0f6ff">' + p.name + '</b><br>' +
-   '<span style="color:#94a3b8">' + etat + '</span><br>' +
-   '<span style="color:#94a3b8;font-size:11px">Distance: ' + fmtDist(p.totalDist) + ' · ' + (p.speed * 3.6).toFixed(1) + ' km/h</span>';
-}
-
-function renderSidebar() {
- var list = Object.entries(peers);
- document.getElementById('peerCount').textContent = list.length;
- document.getElementById('aClearBtn').disabled = list.length === 0;
- document.getElementById('aLocateBtn').disabled = !selectedId;
-
- var el = document.getElementById('peerList');
- if (!list.length) {
-   el.innerHTML = '<div class="empty"><div class="empty-icon">📡</div>En attente de trackers…</div>';
-   document.getElementById('adminInfoPanel').style.display = 'none';
-   return;
- }
-
- el.innerHTML = list.map(function(entry) {
-   var id = entry[0];
-   var p = entry[1];
-   return '<div class="peer-item ' + (selectedId === id ? 'active' : '') + '" onclick="selectPeer(\'' + id + '\')">' +
-     '<div class="peer-dot ' + (p.isMoving ? 'moving' : '') + '"></div>' +
-     '<div style="flex:1">' +
-       '<div class="peer-name">' + p.name + '</div>' +
-       '<div class="peer-sub">' + fmtDist(p.totalDist) + ' · ' + p.trail.length + ' pts</div>' +
-     '</div>' +
-     '<span class="badge ' + (p.isMoving ? 'moving' : 'idle') + '">' + (p.isMoving ? '🔴' : '🔵') + '</span>' +
-   '</div>';
- }).join('');
-
- if (selectedId && peers[selectedId]) {
-   var p = peers[selectedId];
-   document.getElementById('adminInfoPanel').style.display = 'block';
-   document.getElementById('aState').textContent   = p.isMoving ? '🔴 EN MOUVEMENT' : '🔵 ARRÊTÉ';
-   document.getElementById('aDist').textContent    = fmtDist(p.totalDist);
-   document.getElementById('aSpeed').textContent   = (p.speed * 3.6).toFixed(1) + ' km/h';
-   document.getElementById('aLat').textContent     = p.lat != null ? p.lat.toFixed(5) : '--';
-   document.getElementById('aLon').textContent     = p.lng != null ? p.lng.toFixed(5) : '--';
- } else {
-   document.getElementById('adminInfoPanel').style.display = 'none';
- }
-}
-
-function selectPeer(id) {
- selectedId = id;
- document.getElementById('aLocateBtn').disabled = false;
- renderSidebar();
- if (peers[id] && peers[id].lat != null) adminMap.setView([peers[id].lat, peers[id].lng], 16);
-}
-
-function locateSelected() {
- var p = peers[selectedId];
- if (!p || p.lat == null) return;
- adminMap.setView([p.lat, p.lng], 18);
- var ring = L.circle([p.lat, p.lng],
-   { color: '#f59e0b', fillColor: '#f59e0b', fillOpacity: .15, radius: 40, weight: 2 })
-   .addTo(adminMap);
- setTimeout(function() { if (adminMap.hasLayer(ring)) adminMap.removeLayer(ring); }, 3000);
-}
-
-function adminClearAll() {
- if (!window.confirm('Effacer toutes les traces de la carte ?')) return;
- Object.entries(peers).forEach(function(entry) {
-   var p = entry[1];
-   p.trail.forEach(function(seg) { if (adminMap.hasLayer(seg)) adminMap.removeLayer(seg); });
-   p.trail = [];
-   p.totalDist = 0;
-   p.isMoving = false;
-   if (p.marker) { p.marker.setStyle(markerStyle(false)); p.marker.setPopupContent(popupHtml(p)); }
- });
- selectedId = null;
- renderSidebar();
-}
-
-function setStatus(icon, text, sub, color) {
- document.getElementById('statusCard').innerHTML =
-   '<div class="status-icon">' + icon + '</div>' +
-   '<div class="status-text" style="' + (color ? 'color:' + color : '') + '">' + text + '</div>' +
-   '<div class="status-sub">' + (sub || '') + '</div>';
-}
-
-function trackerConnect() {
- var code = document.getElementById('codeInput').value.trim().toUpperCase();
- if (code.length < 4) {
-   setStatus('⚠️', 'Code invalide', 'Le code doit faire au moins 4 caractères', '#f59e0b');
-   return;
- }
- var name = document.getElementById('trackerName').value.trim() || 'Tracker';
-
- if (trackerWatchId) { navigator.geolocation.clearWatch(trackerWatchId); trackerWatchId = null; }
- if (trackerConn)   { try { trackerConn.close(); }    catch(e){} trackerConn = null; }
- if (myTrackerPeer) { try { myTrackerPeer.destroy(); } catch(e){} myTrackerPeer = null; }
-
- setStatus('⏳', 'Connexion…', 'Connexion au serveur PeerJS…');
-
- setTimeout(function() {
-   myTrackerPeer = new Peer({ host: '0.peerjs.com', port: 443, secure: true, path: '/' });
-
-   var openTimeout = setTimeout(function() {
-     setStatus('❌', 'Serveur inaccessible', 'Vérifiez votre connexion internet et réessayez', '#ef4444');
-     try { myTrackerPeer.destroy(); } catch(e){}
-     myTrackerPeer = null;
-   }, 10000);
-
-   myTrackerPeer.on('open', function() {
-     clearTimeout(openTimeout);
-     setStatus('🔗', 'Connexion à l\'admin…', 'Code: ' + code);
-     var conn = myTrackerPeer.connect('fg-admin-' + code, { reliable: true });
-
-     var connTimeout = setTimeout(function() {
-       setStatus('❌', 'Admin introuvable', 'Vérifiez le code ' + code + ' et que l\'admin est ouvert', '#ef4444');
-     }, 8000);
-
-     conn.on('open', function() {
-       clearTimeout(connTimeout);
-       trackerConn = conn;
-       conn.send({ type: 'name', value: name });
-       document.getElementById('gpsBox').style.display = 'block';
-       setStatus('✅', 'Connecté ! Acquisition GPS…', 'Patientez quelques secondes…', '#22c55e');
-       startGPS(conn);
-     });
-
-     conn.on('close', function() {
-       clearTimeout(connTimeout);
-       setStatus('❌', 'Déconnecté', 'Appuyez sur Connecter pour relancer', '#ef4444');
-       document.getElementById('gpsBox').style.display = 'none';
-       if (trackerWatchId) { navigator.geolocation.clearWatch(trackerWatchId); trackerWatchId = null; }
-     });
-
-     conn.on('error', function(e) {
-       clearTimeout(connTimeout);
-       setStatus('❌', 'Erreur connexion', String(e), '#ef4444');
-     });
-   });
-
-   myTrackerPeer.on('error', function(err) {
-     if (err.type === 'peer-unavailable')
-       setStatus('❌', 'Admin introuvable', 'Vérifiez le code ' + code + ' et que l\'admin est bien ouvert', '#ef4444');
-     else if (err.type === 'network')
-       setStatus('❌', 'Pas de réseau', 'Vérifiez votre connexion internet', '#ef4444');
-     else if (err.type === 'server-error')
-       setStatus('❌', 'Serveur PeerJS indisponible', 'Réessayez dans quelques secondes', '#ef4444');
-     else
-       setStatus('❌', 'Erreur: ' + err.type, 'Réessayez', '#ef4444');
-   });
- }, 300);
-}
-
-function startGPS(conn) {
- if (!('geolocation' in navigator)) {
-   setStatus('❌', 'GPS non disponible', 'Appareil non compatible', '#ef4444');
-   return;
- }
-
- var MAX_ACC   = 300;
- var SEND_DIST = 10;  // <-- Envoi toutes les 10m (plus fréquent pour un suivi fluide)
- var SMOOTH    = 3;   // Moins de lissage pour plus de réactivité
-
- var lastSent  = null;
- var history   = [];
-
- function smoothed() {
-   if (!history.length) return null;
-   var lat = history.reduce(function(s, p) { return s + p.lat; }, 0) / history.length;
-   var lng = history.reduce(function(s, p) { return s + p.lng; }, 0) / history.length;
-   return { lat: lat, lng: lng };
- }
-
- trackerWatchId = navigator.geolocation.watchPosition(
-   function(pos) {
-     var lat      = pos.coords.latitude;
-     var lng      = pos.coords.longitude;
-     var accuracy = pos.coords.accuracy;
-     var speed    = pos.coords.speed;
-
-     document.getElementById('tLat').textContent = lat.toFixed(5);
-     document.getElementById('tLon').textContent = lng.toFixed(5);
-     document.getElementById('tAcc').textContent = Math.round(accuracy) + ' m';
-     document.getElementById('tSpd').textContent =
-       speed != null ? (speed * 3.6).toFixed(1) + ' km/h' : '0 km/h';
-     updateAccBar(accuracy);
-
-     if (accuracy > MAX_ACC) {
-       setStatus('🔍', 'Signal GPS faible', 'Précision ' + Math.round(accuracy) + ' m — allez à l\'extérieur', '#f59e0b');
-       return;
-     }
-
-     history.push({ lat: lat, lng: lng });
-     if (history.length > SMOOTH) history.shift();
-
-     var avg = smoothed();
-
-     if (!lastSent) {
-       lastSent = avg;
-       send(conn, avg.lat, avg.lng, speed);
-       setStatus('✅', 'Point affiché sur la carte', 'Précision ' + Math.round(accuracy) + ' m', '#22c55e');
-       return;
-     }
-
-     var d = getDistance(lastSent.lat, lastSent.lng, avg.lat, avg.lng);
-
-     if (d >= SEND_DIST) {
-       lastSent = avg;
-       send(conn, avg.lat, avg.lng, speed);
-       setStatus('✅', 'Déplacé de ' + Math.round(d) + ' m', 'Précision ' + Math.round(accuracy) + ' m', '#22c55e');
-     } else {
-       setStatus('✅', 'En position', 'Précision ' + Math.round(accuracy) + ' m · immobile (' + Math.round(d) + ' m)', '#22c55e');
-     }
-   },
-   function(err) {
-     var msg = '', hint = '';
-     switch (err.code) {
-       case 1: msg = 'Permission GPS refusée'; hint = 'Autorisez la localisation'; break;
-       case 2: msg = 'GPS indisponible'; hint = 'Activez le GPS'; break;
-       case 3:
-         msg = 'Délai GPS dépassé';
-         hint = 'Nouvelle tentative…';
-         setTimeout(function() {
-           if (trackerConn && trackerConn.open) {
-             if (trackerWatchId) { navigator.geolocation.clearWatch(trackerWatchId); trackerWatchId = null; }
-             startGPS(conn);
-           }
-         }, 3000);
-         break;
-     }
-     setStatus('⚠️', msg, hint, '#f59e0b');
-   },
-   { enableHighAccuracy: true, maximumAge: 5000, timeout: 30000 }
- );
-}
-
-function send(conn, lat, lng, speed) {
- if (conn && conn.open) conn.send({ type: 'gps', lat: lat, lng: lng, speed: speed || 0 });
-}
-
-function updateAccBar(accuracy) {
- var fill = document.getElementById('accFill');
- var lbl  = document.getElementById('accLbl');
- if (!fill) return;
- var pct, cls, txt;
- if      (accuracy <= 10)  { pct = 100; cls = '';     txt = '✅ Excellent (' + Math.round(accuracy) + ' m)'; }
- else if (accuracy <= 30)  { pct = 75;  cls = '';     txt = '🟢 Bon (' + Math.round(accuracy) + ' m)'; }
- else if (accuracy <= 80)  { pct = 45;  cls = 'warn'; txt = '🟡 Moyen (' + Math.round(accuracy) + ' m)'; }
- else if (accuracy <= 200) { pct = 25;  cls = 'warn'; txt = '🟠 Faible (' + Math.round(accuracy) + ' m)'; }
- else                      { pct = 10;  cls = 'bad';  txt = '🔴 Très faible (' + Math.round(accuracy) + ' m)'; }
- fill.style.width = pct + '%';
- fill.className = 'acc-fill ' + cls;
- lbl.textContent = txt;
-}
-
-function getDistance(la1, lo1, la2, lo2) {
- var R  = 6371000;
- var dL = (la2 - la1) * Math.PI / 180;
- var dO = (lo2 - lo1) * Math.PI / 180;
- var a  = Math.sin(dL/2) * Math.sin(dL/2) +
-   Math.cos(la1 * Math.PI / 180) * Math.cos(la2 * Math.PI / 180) *
-   Math.sin(dO/2) * Math.sin(dO/2);
- return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-}
-function fmtDist(d) {
- return d >= 1000 ? (d / 1000).toFixed(2) + ' km' : Math.round(d) + ' m';
-}
-
-window.addEventListener('resize', function() {
- if (adminMap) setTimeout(function() { adminMap.invalidateSize(); }, 100);
+document.addEventListener('keydown',e=>{
+  if(e.key==='Enter' && document.getElementById('pwModal').classList.contains('show')) checkPassword();
 });
-window.addEventListener('orientationchange', function() {
- if (adminMap) setTimeout(function() { adminMap.invalidateSize(); }, 200);
-});
+function chooseTracker(){
+  document.getElementById('splash').style.display='none';
+  document.getElementById('trackerView').style.display='flex';
+}
+
+/* ============================================================
+   ADMIN
+   ============================================================ */
+let adminPeer, adminMap, sessionCode;
+const trackers = {}; // id -> { name, marker, data, lastPos, distance }
+let selectedId = null;
+
+function makeCode(){
+  const c="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let s=""; for(let i=0;i<5;i++) s+=c[Math.floor(Math.random()*c.length)];
+  return s;
+}
+
+function startAdmin(){
+  // Carte
+  adminMap = L.map('adminMap',{zoomControl:true}).setView([7.54,-5.55], 7);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+    maxZoom:19, attribution:'© OpenStreetMap'
+  }).addTo(adminMap);
+
+  // PeerJS
+  sessionCode = makeCode();
+  const peerId = PEER_PREFIX + sessionCode;
+  adminPeer = new Peer(peerId, { debug: 1 });
+
+  adminPeer.on('open', id => {
+    document.getElementById('sessionCode').textContent = sessionCode;
+    document.getElementById('sessionHint').textContent =
+      "Communiquez ce code aux trackers pour qu'ils se connectent.";
+  });
+
+  adminPeer.on('error', err => {
+    console.error('[Admin Peer error]', err);
+    document.getElementById('sessionHint').textContent =
+      "Erreur : " + err.type + ". Rechargez la page.";
+  });
+
+  // Connexion entrante d'un tracker
+  adminPeer.on('connection', conn => {
+    console.log('[Admin] Tracker entrant:', conn.peer);
+
+    conn.on('open', () => {
+      trackers[conn.peer] = trackers[conn.peer] || {
+        name: conn.peer.slice(-4),
+        marker: null,
+        data: null,
+        lastPos: null,
+        distance: 0,
+        conn
+      };
+      renderPeerList();
+    });
+
+    // ⭐ LE COEUR : on reçoit chaque mise à jour GPS
+    conn.on('data', data => {
+      if(!data || typeof data.lat !== 'number') return;
+      onTrackerData(conn.peer, data);
+    });
+
+    conn.on('close', () => {
+      if(trackers[conn.peer]){
+        if(trackers[conn.peer].marker) adminMap.removeLayer(trackers[conn.peer].marker);
+        delete trackers[conn.peer];
+        if(selectedId === conn.peer) selectedId = null;
+        renderPeerList();
+      }
+    });
+  });
+}
+
+function onTrackerData(id, d){
+  const t = trackers[id];
+  if(!t) return;
+  if(d.name) t.name = d.name;
+
+  // Distance cumulée
+  if(t.lastPos){
+    t.distance += haversine(t.lastPos.lat, t.lastPos.lng, d.lat, d.lng);
+  }
+  t.lastPos = { lat:d.lat, lng:d.lng };
+  t.data = d;
+
+  // Marker
+  if(!t.marker){
+    t.marker = L.circleMarker([d.lat,d.lng],{
+      radius:9, color:'#fff', weight:2, fillColor:'#3b82f6', fillOpacity:.9
+    }).addTo(adminMap);
+    t.marker.bindPopup(t.name);
+    t.marker.on('click', ()=>{ selectedId = id; renderPeerList(); renderInfo(); });
+  } else {
+    t.marker.setLatLng([d.lat,d.lng]);
+  }
+  const moving = (d.speed||0) > 0.5;
+  t.marker.setStyle({ fillColor: moving ? '#ef4444' : '#3b82f6' });
+  t.marker.getPopup().setContent(`<b>${t.name}</b><br>${moving?'🏃 En mouvement':'⏸️ Immobile'}<br>${(d.speed*3.6||0).toFixed(1)} km/h`);
+
+  if(!selectedId) selectedId = id;
+  renderPeerList();
+  if(selectedId === id) renderInfo();
+}
+
+function renderPeerList(){
+  const ids = Object.keys(trackers);
+  document.getElementById('peerCount').textContent = `📱 Trackers connectés (${ids.length})`;
+  const list = document.getElementById('peerList');
+  if(!ids.length){
+    list.innerHTML = '<div class="empty">📡 En attente de trackers…</div>';
+    return;
+  }
+  list.innerHTML = ids.map(id=>{
+    const t = trackers[id];
+    const moving = t.data && (t.data.speed||0) > 0.5;
+    return `<div class="peer-item ${selectedId===id?'active':''}" onclick="selectPeer('${id}')">
+      <div class="peer-dot ${moving?'moving':''}"></div>
+      <div style="flex:1;">
+        <div class="peer-name">${escapeHtml(t.name)}</div>
+        <div class="peer-sub">${moving?'En mouvement':'Immobile'} · ${(t.distance).toFixed(0)} m</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function selectPeer(id){ selectedId = id; renderPeerList(); renderInfo(); locateSelected(); }
+
+function renderInfo(){
+  const t = trackers[selectedId];
+  if(!t || !t.data){ return; }
+  const d = t.data;
+  const moving = (d.speed||0) > 0.5;
+  document.getElementById('iState').textContent = moving ? '🏃 En mouvement' : '⏸️ Immobile';
+  document.getElementById('iSpeed').textContent = ((d.speed||0)*3.6).toFixed(1) + ' km/h';
+  document.getElementById('iAcc').textContent = d.acc ? d.acc.toFixed(0)+' m' : '--';
+  document.getElementById('iLat').textContent = d.lat.toFixed(5);
+  document.getElementById('iLng').textContent = d.lng.toFixed(5);
+}
+function locateSelected(){
+  const t = trackers[selectedId];
+  if(t && t.lastPos) adminMap.setView([t.lastPos.lat, t.lastPos.lng], 17, {animate:true});
+}
+function clearAll(){
+  Object.values(trackers).forEach(t=>{ if(t.marker) adminMap.removeLayer(t.marker); if(t.conn) t.conn.close(); });
+  Object.keys(trackers).forEach(k=>delete trackers[k]);
+  selectedId = null; renderPeerList();
+}
+function copyCode(){
+  navigator.clipboard.writeText(sessionCode).then(()=>{
+    const b = event.target; const old = b.textContent;
+    b.textContent='✓ Copié'; setTimeout(()=>b.textContent=old,1200);
+  });
+}
+
+/* ============================================================
+   TRACKER
+   ============================================================ */
+let trackerPeer, trackerConn, watchId = null;
+
+function connectTracker(){
+  const code = document.getElementById('codeInput').value.trim().toUpperCase();
+  const name = document.getElementById('trackerName').value.trim() || ('Agent-'+Math.floor(Math.random()*999));
+  if(code.length < 4){ alert('Entrez un code valide'); return; }
+
+  setStatus('🔌','Connexion…','Création du canal PeerJS');
+
+  trackerPeer = new Peer(undefined, { debug: 1 });
+
+  trackerPeer.on('open', myId => {
+    trackerConn = trackerPeer.connect(PEER_PREFIX + code, { reliable: true });
+
+    trackerConn.on('open', () => {
+      setStatus('✅','Connecté','Envoi de la position en temps réel…');
+      // 1er envoi : juste le nom
+      trackerConn.send({ name, hello: true });
+      startGeolocation(name);
+    });
+
+    trackerConn.on('close', () => {
+      setStatus('❌','Déconnecté','Le canal vers l\'admin est fermé');
+      stopGeolocation();
+    });
+
+    trackerConn.on('error', err => {
+      console.error('[Tracker conn error]', err);
+      setStatus('⚠️','Erreur','Vérifiez le code et réessayez');
+    });
+  });
+
+  trackerPeer.on('error', err => {
+    console.error('[Tracker Peer error]', err);
+    setStatus('⚠️','Erreur PeerJS', err.type || String(err));
+  });
+}
+
+function startGeolocation(name){
+  if(!('geolocation' in navigator)){
+    setStatus('🚫','GPS indisponible','Ce navigateur ne supporte pas la géolocalisation');
+    return;
+  }
+  stopGeolocation();
+
+  // ⭐ watchPosition = temps réel
+  watchId = navigator.geolocation.watchPosition(
+    pos => {
+      const { latitude, longitude, accuracy, speed } = pos.coords;
+      document.getElementById('tLat').textContent = latitude.toFixed(5);
+      document.getElementById('tLng').textContent = longitude.toFixed(5);
+      document.getElementById('tAcc').textContent = accuracy.toFixed(0)+' m';
+      document.getElementById('tSpeed').textContent = ((speed||0)*3.6).toFixed(1)+' km/h';
+
+      if(trackerConn && trackerConn.open){
+        trackerConn.send({
+          name,
+          lat: latitude,
+          lng: longitude,
+          acc: accuracy,
+          speed: speed || 0,
+          t: Date.now()
+        });
+      }
+    },
+    err => {
+      console.error('[GPS]', err);
+      let msg = 'Erreur GPS';
+      if(err.code === 1) msg = 'Permission refusée. Autorisez la géolocalisation.';
+      else if(err.code === 2) msg = 'Position indisponible';
+      else if(err.code === 3) msg = 'Timeout GPS';
+      setStatus('🚫','GPS', msg);
+    },
+    { enableHighAccuracy:true, maximumAge:0, timeout:20000 }
+  );
+}
+function stopGeolocation(){
+  if(watchId !== null){ navigator.geolocation.clearWatch(watchId); watchId = null; }
+}
+function setStatus(icon, txt, sub){
+  document.getElementById('tIcon').textContent = icon;
+  document.getElementById('tStatus').textContent = txt;
+  document.getElementById('tSub').textContent = sub;
+}
+
+/* ============================================================
+   UTILS
+   ============================================================ */
+function haversine(lat1,lon1,lat2,lon2){
+  const R=6371000, toR=x=>x*Math.PI/180;
+  const dLat=toR(lat2-lat1), dLon=toR(lon2-lon1);
+  const a=Math.sin(dLat/2)**2 + Math.cos(toR(lat1))*Math.cos(toR(lat2))*Math.sin(dLon/2)**2;
+  return 2*R*Math.asin(Math.sqrt(a));
+}
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 </script>
 </body>
 </html>
